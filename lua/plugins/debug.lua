@@ -4,6 +4,7 @@ return {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
     'nvim-neotest/nvim-nio',
+    'theHamsta/nvim-dap-virtual-text',
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
@@ -36,6 +37,30 @@ return {
         'debugpy',
       },
     }
+    require('nvim-dap-virtual-text').setup {
+      commented = true,
+    }
+
+    vim.fn.sign_define('DapBreakpoint', {
+      text = '',
+      texthl = 'DiagnosticSignError',
+      linehl = '',
+      numhl = '',
+    })
+
+    vim.fn.sign_define('DapBreakpointRejected', {
+      text = '',
+      texthl = 'DiagnosticSignError',
+      linehl = '',
+      numhl = '',
+    })
+
+    vim.fn.sign_define('DapStopped', {
+      text = '', -- or "→"
+      texthl = 'DiagnosticSignWarn',
+      linehl = 'Visual',
+      numhl = 'DiagnosticSignWarn',
+    })
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -46,6 +71,9 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+    vim.keymap.set('n', '<space>?', function()
+      require('dapui').eval(nil, { enter = true })
+    end, { desc = 'Debug: show value in floating box' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
