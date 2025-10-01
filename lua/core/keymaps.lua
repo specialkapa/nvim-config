@@ -73,3 +73,6 @@ end, { desc = 'Previous todo comment' })
 
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- Toggle Terminal
+vim.keymap.set('n', '<leader>tt', '<cmd> ToggleTerm size=20 direction=horizontal <CR>', opts)

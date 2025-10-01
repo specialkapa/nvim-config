@@ -30,4 +30,5 @@ require('lazy').setup {
   require 'plugins.misc',
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
+  require 'plugins.toggleterm',
 }
