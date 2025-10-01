@@ -31,4 +31,7 @@ require('lazy').setup {
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
   require 'plugins.toggleterm',
+  require 'plugins.comment',
+  require 'plugins.neotest',
+  require 'plugins.debug',
 }

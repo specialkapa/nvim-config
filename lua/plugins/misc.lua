@@ -41,4 +41,11 @@ return {
       require('colorizer').setup()
     end,
   },
+  {
+    'LostbBlizzard/lazysql.nvim',
+    opts = {}, -- automatically calls `require("lazysql").setup()`
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+    },
+  },
 }
