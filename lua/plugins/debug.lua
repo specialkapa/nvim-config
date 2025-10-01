@@ -74,6 +74,10 @@ return {
     vim.keymap.set('n', '<space>?', function()
       require('dapui').eval(nil, { enter = true })
     end, { desc = 'Debug: show value in floating box' })
+    vim.keymap.set('n', '<leader>de', function()
+      require('dapui').eval()
+      require('dapui').eval()
+    end, { desc = 'Debug: Evaluate expression' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
