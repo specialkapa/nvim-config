@@ -92,3 +92,5 @@ end
 vim.cmd 'autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()'
 
 vim.keymap.set('n', ':', '<Plug>(cmdpalette)')
+
+vim.keymap.set('n', '<leader>gd', ':Gdiffsplit<CR>', opts) -- staged version vs working tree view of file

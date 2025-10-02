@@ -63,7 +63,9 @@ return {
     })
 
     -- Basic debugging keymaps, feel free to change to your liking!
+    vim.keymap.set('n', '<leader>rb', dap.clear_breakpoints)
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+    vim.keymap.set('n', '<C-F5>', dap.run_last, { desc = 'Debug: Restart' })
     vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })

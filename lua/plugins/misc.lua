@@ -70,4 +70,11 @@ return {
       }
     end,
   },
+  {
+    'andreiamatuni/dataframes.nvim',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'mfussenegger/nvim-dap-python',
+    },
+  },
 }
