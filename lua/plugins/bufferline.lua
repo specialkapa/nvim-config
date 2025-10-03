@@ -1,3 +1,4 @@
+
 return {
   'akinsho/bufferline.nvim',
   dependencies = {
@@ -27,7 +28,7 @@ return {
         show_buffer_close_icons = true,
         show_close_icon = true,
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-        separator_style = { '│', '│' }, -- | "thick" | "thin" | { 'any', 'any' },
+        separator_style = 'slant', -- { '│', '│' } "thick" | "thin" | { 'any', 'any' },
         enforce_regular_tabs = true,
         always_show_bufferline = true,
         show_tab_indicators = false,
@@ -43,17 +44,17 @@ return {
       },
       highlights = {
         separator = {
-          fg = '#434C5E',
+          fill = "#181c24",
         },
         buffer_selected = {
           bold = true,
-          italic = false,
+          italic = true,
         },
-        -- separator_selected = {},
-        -- tab_selected = {},
-        -- background = {},
-        -- indicator_selected = {},
-        -- fill = {},
+      -- separator_selected = {},
+      -- tab_selected = {},
+      -- background = {},
+      -- indicator_selected = {},
+      -- fill = {},
       },
     }
   end,

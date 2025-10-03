@@ -49,28 +49,6 @@ return {
     },
   },
   {
-    'hachy/cmdpalette.nvim',
-    config = function()
-      require('cmdpalette').setup {
-        win = {
-          height = 0.05,
-          width = 0.5,
-          border = 'rounded',
-          row_off = -2,
-        },
-        sign = {
-          text = ':',
-        },
-        buf = {
-          filetype = 'vim',
-          syntax = 'vim',
-        },
-        delete_confirm = false,
-        show_title = false,
-      }
-    end,
-  },
-  {
     'andreiamatuni/dataframes.nvim',
     dependencies = {
       'mfussenegger/nvim-dap',

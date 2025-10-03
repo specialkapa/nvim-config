@@ -10,6 +10,7 @@ return {
     vim.g.nord_italic = false
     vim.g.nord_uniform_diff_background = true
     vim.g.nord_bold = false
+    vim.g.nord_cursorline_transparent = false
 
     require('nord').set()
 
