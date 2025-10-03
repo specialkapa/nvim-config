@@ -1,6 +1,11 @@
 -- Standalone plugins with less than 10 lines of config go here
 return {
   {
+    'vhyrro/luarocks.nvim',
+    priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
+    config = true,
+  },
+  {
     -- Tmux & split window navigation
     'christoomey/vim-tmux-navigator',
   },
