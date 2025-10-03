@@ -55,4 +55,7 @@ return {
       'mfussenegger/nvim-dap-python',
     },
   },
+  {
+    'github/copilot.vim', -- depends on node.js. Make sure it is installed
+  },
 }
