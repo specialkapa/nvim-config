@@ -15,7 +15,7 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 require('lazy').setup {
-  require 'plugins.neotree',
+  require 'plugins.nvim-tree',
   require 'plugins.colortheme',
   require 'plugins.bufferline',
   require 'plugins.lualine',
@@ -34,4 +34,5 @@ require('lazy').setup {
   require 'plugins.comment',
   require 'plugins.neotest',
   require 'plugins.debug',
+  require 'plugins.neominimap',
 }
