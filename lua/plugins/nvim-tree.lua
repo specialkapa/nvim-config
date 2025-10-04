@@ -8,10 +8,14 @@ local function on_attach(bufnr)
   -- default mappings
   api.config.mappings.default_on_attach(bufnr)
 
+  -- automatically open a file upon creation
+  api.events.subscribe(api.events.Event.FileCreated, function(file)
+    vim.cmd('edit ' .. vim.fn.fnameescape(file.fname))
+  end)
+
   -- custom mappings
   vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
-  vim.keymap.set('n', '<leader>e', ':NvimTreeToggle toggle position=left<CR>', { noremap = true, silent = true }) -- focus file explorer
-  vim.keymap.set('n', '<leader>e', ':NvimTreeToggle toggle position=left<CR>', { noremap = true, silent = true }) -- focus file explorer
+  vim.keymap.set('n', '<CR>', api.node.open.tab_drop, opts 'Tab drop')
 end
 
 return {
@@ -23,7 +27,7 @@ return {
   },
   config = function()
     require('nvim-tree').setup {
-      on_attach = 'default',
+      on_attach = on_attach,
       hijack_cursor = false,
       auto_reload_on_write = true,
       disable_netrw = false,
@@ -74,7 +78,7 @@ return {
         hidden_display = 'none',
         symlink_destination = true,
         decorators = { 'Git', 'Open', 'Hidden', 'Modified', 'Bookmark', 'Diagnostics', 'Copied', 'Cut' },
-        highlight_git = 'none',
+        highlight_git = 'name',
         highlight_diagnostics = 'none',
         highlight_opened_files = 'none',
         highlight_modified = 'none',
@@ -140,8 +144,8 @@ return {
               symlink_open = '',
             },
             git = {
-              unstaged = '✗"',
-              staged = '✗"',
+              unstaged = '✗',
+              staged = '✓',
               unmerged = '',
               renamed = '➜',
               untracked = '★',
