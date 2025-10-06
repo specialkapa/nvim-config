@@ -29,6 +29,22 @@ local function layout()
     return { type = 'button', val = txt, on_press = on_press, opts = opts }
   end
 
+  math.randomseed(os.time())
+  local header_color = 'AlphaCol' .. math.random(11)
+
+  local header_lines = {
+    [[                                                                       ]],
+    [[                                                                     ]],
+    [[       ████ ██████           █████      ██                     ]],
+    [[      ███████████             █████                             ]],
+    [[      █████████ ███████████████████ ███   ███████████   ]],
+    [[     █████████  ███    █████████████ █████ ██████████████   ]],
+    [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
+    [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
+    [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+    [[                                                                       ]],
+  }
+
   -- https://github.com/goolord/alpha-nvim/issues/105
   local lazycache = setmetatable({}, {
     __newindex = function(table, index, fn)
@@ -50,13 +66,34 @@ local function layout()
     end,
   })
 
-  ---@return string
+  ---@return table
   lazycache.info = function()
-    local plugins = #vim.tbl_keys(require('lazy').plugins())
+    local stats = require('lazy').stats()
+    local total = stats.count or 0
+    local loaded = stats.loaded or 0
+    local progress = total > 0 and (loaded / total) or 0
+    local bar_length = 20
+    local filled = math.floor(progress * bar_length + 0.5)
+    filled = math.max(0, math.min(filled, bar_length))
+    local bar = string.format('%s%s', string.rep('█', filled), string.rep('░', bar_length - filled))
     local v = vim.version()
     local datetime = os.date ' %d-%m-%Y   %H:%M:%S'
     local platform = vim.fn.has 'win32' == 1 and '' or ''
-    return string.format('  %d  %s %d.%d.%d  %s', plugins, platform, v.major, v.minor, v.patch, datetime)
+    local top_line = string.format('%s Neovim %d.%d.%d  %s', platform, v.major, v.minor, v.patch, datetime)
+    local progress_line = string.format('%s  %d/%d plugins loaded', bar, loaded, total)
+    local progress_hl = loaded == total and 'AlphaProgressLoaded' or 'AlphaProgressPending'
+    return {
+      {
+        type = 'text',
+        val = top_line,
+        opts = { hl = header_color, position = 'center' },
+      },
+      {
+        type = 'text',
+        val = progress_line,
+        opts = { hl = progress_hl, position = 'center' },
+      },
+    }
   end
 
   ---@return table
@@ -104,32 +141,18 @@ local function layout()
     return require 'alpha.fortune'()
   end
 
-  math.randomseed(os.time())
-  local header_color = 'AlphaCol' .. math.random(11)
-
   return {
     { type = 'padding', val = 1 },
     {
       type = 'text',
-      val = {
-        [[                                                                       ]],
-        [[                                                                     ]],
-        [[       ████ ██████           █████      ██                     ]],
-        [[      ███████████             █████                             ]],
-        [[      █████████ ███████████████████ ███   ███████████   ]],
-        [[     █████████  ███    █████████████ █████ ██████████████   ]],
-        [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-        [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-        [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
-        [[                                                                       ]],
-      },
+      val = header_lines,
       opts = { hl = header_color, position = 'center' },
     },
     { type = 'padding', val = 1 },
     {
-      type = 'text',
+      type = 'group',
       val = lazycache 'info',
-      opts = { hl = header_color, position = 'center' },
+      opts = { spacing = 1 },
     },
     { type = 'padding', val = 2 },
     {
@@ -156,6 +179,8 @@ return {
   'goolord/alpha-nvim',
   event = 'VimEnter',
   config = function()
+    vim.api.nvim_set_hl(0, 'AlphaProgressLoaded', { fg = '#98c379' })
+    vim.api.nvim_set_hl(0, 'AlphaProgressPending', { fg = '#e06c75' })
     require('alpha').setup {
       layout = layout(),
       opts = {
