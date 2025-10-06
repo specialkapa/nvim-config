@@ -179,8 +179,8 @@ return {
   'goolord/alpha-nvim',
   event = 'VimEnter',
   config = function()
-    vim.api.nvim_set_hl(0, 'AlphaProgressLoaded', { fg = '#98c379' })
-    vim.api.nvim_set_hl(0, 'AlphaProgressPending', { fg = '#e06c75' })
+    vim.api.nvim_set_hl(0, 'AlphaProgressLoaded', { fg = '#B4C424' })
+    vim.api.nvim_set_hl(0, 'AlphaProgressPending', { fg = '#F88379' })
     require('alpha').setup {
       layout = layout(),
       opts = {
