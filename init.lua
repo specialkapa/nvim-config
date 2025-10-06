@@ -17,7 +17,7 @@ rtp:prepend(lazypath)
 require('lazy').setup {
   require 'plugins.nvim-tree',
   require 'plugins.colortheme',
-  require 'plugins.bufferline',
+  require 'plugins.barbar',
   require 'plugins.lualine',
   require 'plugins.treesitter',
   require 'plugins.telescope',
@@ -25,7 +25,7 @@ require('lazy').setup {
   require 'plugins.autocompletion',
   require 'plugins.none-ls',
   require 'plugins.gitsigns',
-  require 'plugins.alpha',
+  require 'plugins.welcome-dashboard',
   require 'plugins.indent-blankline',
   require 'plugins.misc',
   require 'plugins.lazygit',
