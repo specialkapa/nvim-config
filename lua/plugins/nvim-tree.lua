@@ -86,7 +86,7 @@ return {
         highlight_bookmarks = 'none',
         highlight_clipboard = 'name',
         indent_markers = {
-          enable = false,
+          enable = true,
           inline_arrows = true,
           icons = {
             corner = '└',
@@ -107,7 +107,7 @@ return {
               color = true,
             },
           },
-          git_placement = 'before',
+          git_placement = 'after',
           modified_placement = 'after',
           hidden_placement = 'after',
           diagnostics_placement = 'signcolumn',
