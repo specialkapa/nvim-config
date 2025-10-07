@@ -35,4 +35,6 @@ require('lazy').setup {
   require 'plugins.neotest',
   require 'plugins.debug',
   require 'plugins.neominimap',
+  require 'plugins.ai-stuff',
+  require 'plugins.trouble',
 }
