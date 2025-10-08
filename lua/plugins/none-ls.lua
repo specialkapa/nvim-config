@@ -5,6 +5,7 @@ return {
     'jayp0521/mason-null-ls.nvim', -- ensure dependencies are installed,
     'joechrisellis/lsp-format-modifications.nvim',
   },
+  event = { 'BufReadPre', 'BufNewFile' },
   config = function()
     local null_ls = require 'null-ls'
     local lsp_format_modifications = require 'lsp-format-modifications'

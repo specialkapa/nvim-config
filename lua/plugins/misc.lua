@@ -1,10 +1,6 @@
 -- Standalone plugins with less than 10 lines of config go here
 return {
   {
-    -- Tmux & split window navigation
-    'christoomey/vim-tmux-navigator',
-  },
-  {
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
   },
@@ -19,6 +15,7 @@ return {
   {
     -- Hints keybinds
     'folke/which-key.nvim',
+    event = 'VeryLazy',
   },
   {
     -- Autoclose parentheses, brackets, quotes, etc.
@@ -30,23 +27,10 @@ return {
   {
     -- High-performance color highlighter
     'norcalli/nvim-colorizer.lua',
+    event = 'InsertEnter',
     config = function()
       require('colorizer').setup()
     end,
-  },
-  {
-    'LostbBlizzard/lazysql.nvim',
-    opts = {}, -- automatically calls `require("lazysql").setup()`
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-    },
-  },
-  {
-    'andreiamatuni/dataframes.nvim',
-    dependencies = {
-      'mfussenegger/nvim-dap',
-      'mfussenegger/nvim-dap-python',
-    },
   },
   {
     'github/copilot.vim', -- depends on node.js. Make sure it is installed
