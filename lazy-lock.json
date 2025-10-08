@@ -20,6 +20,7 @@
   "lazydocker.nvim": { "branch": "main", "commit": "3330d1fc32ff2f52652d5abb1f75123ce5549cfc" },
   "lazygit.nvim": { "branch": "main", "commit": "2305deed25bc61b866d5d39189e9105a45cf1cfb" },
   "lazysql.nvim": { "branch": "master", "commit": "51a5c2bd26650c0c6a0b19d52995cceafb4b6037" },
+  "lsp-format-modifications.nvim": { "branch": "main", "commit": "fd2b0de0afa42bea1d310af8337a4a95ebd27260" },
   "lualine.nvim": { "branch": "master", "commit": "b8c23159c0161f4b89196f74ee3a6d02cdc3a955" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "6bdb14f230de0904229ec367b410fb817e59b072" },
   "mason-null-ls.nvim": { "branch": "main", "commit": "de19726de7260c68d94691afb057fa73d3cc53e7" },
