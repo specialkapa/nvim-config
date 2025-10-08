@@ -37,4 +37,5 @@ require('lazy').setup {
   require 'plugins.neominimap',
   require 'plugins.ai-stuff',
   require 'plugins.trouble',
+  require 'plugins.todo-comments',
 }
