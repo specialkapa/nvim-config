@@ -33,6 +33,24 @@ return {
     end,
   },
   {
+    'ya2s/nvim-cursorline',
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = function()
+      require('nvim-cursorline').setup {
+        cursorline = {
+          enable = false,
+          timeout = 1000,
+          number = false,
+        },
+        cursorword = {
+          enable = true,
+          min_length = 3,
+          hl = { underline = true },
+        },
+      }
+    end,
+  },
+  {
     'github/copilot.vim', -- depends on node.js. Make sure it is installed
   },
 }
