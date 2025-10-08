@@ -98,6 +98,55 @@ return { -- Fuzzy Finder (files, lsp, etc)
       },
     }
 
+    local function find_directory_and_focus()
+      local actions = require 'telescope.actions'
+      local action_state = require 'telescope.actions.state'
+      local api = require 'nvim-tree.api'
+
+      local function attach_mappings(prompt_bufnr, _)
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+
+          local selection = action_state.get_selected_entry()
+          if not selection then
+            return
+          end
+
+          local path = selection.path or selection.filename or selection.value
+          if not path then
+            vim.notify('Could not resolve selection path', vim.log.levels.WARN)
+            return
+          end
+
+          local is_absolute = path:match '^/' or path:match '^[A-Za-z]:[/\\]'
+          if selection.cwd and not is_absolute then
+            path = vim.fn.fnamemodify(selection.cwd .. '/' .. path, ':p')
+          end
+
+          local uv = vim.uv or vim.loop
+          local stat = uv.fs_stat(path)
+          if not stat then
+            vim.notify('Unable to read file information for: ' .. path, vim.log.levels.WARN)
+            return
+          end
+
+          api.tree.find_file { buf = path, open = true, focus = true }
+        end)
+        return true
+      end
+
+      local opts = {
+        attach_mappings = attach_mappings,
+        hidden = true,
+      }
+
+      if vim.fn.executable 'fd' == 1 then
+        opts.find_command = { 'fd', '--type', 'f', '--type', 'd', '--hidden', '--exclude', '.git' }
+      end
+
+      require('telescope.builtin').find_files(opts)
+    end
+
     -- Enable Telescope extensions if they are installed
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
@@ -107,6 +156,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
     vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+    vim.keymap.set('n', '<leader>fdd', find_directory_and_focus, { desc = '[F]ocus [DD]ir in tree' })
     vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
     vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -116,8 +166,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.keymap.set('n', '<leader>st', '<cmd>TodoTelescope<CR>', { desc = '[S]earch [T]ODOs' })
     vim.keymap.set('n', 'Q', ':Telescope cmdline<CR>', { noremap = true, desc = '[S]earch [C]mdline' })
-    vim.keymap.set('n', '<leader>sc', ':Telescope cmdline<CR>', { noremap = true, desc = '[S]earch [C]mdline' })
-
+    vim.keymap.set('n', '<leader>fd', ' :Telescope find_files cwd=', { desc = 'Search in directory' })
     -- Slightly advanced example of overriding default behavior and theme
     vim.keymap.set('n', '<leader>/', function()
       -- You can pass additional configuration to Telescope to change the theme, layout, etc.
