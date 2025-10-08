@@ -99,4 +99,4 @@ vim.keymap.set('n', '<C-S-q>', ':Gdiffsplit<CR>', opts) -- staged version vs wor
 vim.keymap.set('n', '<leader>gb', ':G blame<CR>', opts) -- view git blame line by line (hint: hit key p to view the details in separate pane)
 
 -- nvim-tree global
-vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<cr>', { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<cr>', opts)
