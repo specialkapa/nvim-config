@@ -21,8 +21,6 @@ return {
       'SignColumn',
       'StatusLine',
       'StatusLineNC',
-      'CursorLine',
-      'CursorLineNr',
       'TelescopeNormal',
       'TelescopeBorder',
       'TelescopePromptNormal',
