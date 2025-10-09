@@ -100,3 +100,9 @@ vim.keymap.set('n', '<leader>gb', ':G blame<CR>', opts) -- view git blame line b
 
 -- nvim-tree global
 vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<cr>', opts)
+
+-- search and replace word under cursor (press n to go to next occurrence followed by . to replace all)
+vim.keymap.set('n', '<leader>j', '*``cgn', opts)
+
+-- mapping visual block mode to Atl + V
+vim.keymap.set('n', '<A-v>', '<C-v>', opts)
