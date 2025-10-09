@@ -38,4 +38,6 @@ require('lazy').setup {
   require 'plugins.ai-stuff',
   require 'plugins.trouble',
   require 'plugins.todo-comments',
+  require 'plugins.search-n-replace',
+  require 'plugins.python-utils',
 }

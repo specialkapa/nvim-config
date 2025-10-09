@@ -34,13 +34,12 @@ return {
   },
   {
     'ya2s/nvim-cursorline',
-    event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       require('nvim-cursorline').setup {
         cursorline = {
-          enable = false,
+          enable = true,
           timeout = 1000,
-          number = false,
+          number = true,
         },
         cursorword = {
           enable = true,

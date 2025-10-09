@@ -18,6 +18,38 @@ local function on_attach(bufnr)
   vim.keymap.set('n', '<CR>', api.node.open.tab_drop, opts 'Tab drop')
 end
 
+local function setup_pymple_integration()
+  local ok_tree, tree_api = pcall(require, 'nvim-tree.api')
+  if not ok_tree then
+    return
+  end
+
+  local Event = tree_api.events.Event
+
+  tree_api.events.subscribe(Event.NodeRenamed, function(data)
+    if not data or not data.old_name or not data.new_name then
+      return
+    end
+
+    local ok_pymple_api, pymple_api = pcall(require, 'pymple.api')
+    if not ok_pymple_api then
+      return
+    end
+
+    local ok_pymple_config, pymple_config = pcall(require, 'pymple.config')
+    if not ok_pymple_config or not pymple_config.user_config then
+      return
+    end
+
+    local opts = pymple_config.user_config.update_imports
+    if not opts then
+      return
+    end
+
+    pymple_api.update_imports(data.old_name, data.new_name, opts)
+  end)
+end
+
 return {
   'nvim-tree/nvim-tree.lua',
   version = '*',
@@ -303,5 +335,11 @@ return {
         },
       },
     } -- END_DEFAULT_OPTS
+
+    -- forward rename events to pymple so python imports stay in sync
+    if not vim.g._pymple_nvim_tree_renamed_hook then
+      setup_pymple_integration()
+      vim.g._pymple_nvim_tree_renamed_hook = true
+    end
   end,
 }
