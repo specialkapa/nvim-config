@@ -40,7 +40,7 @@ return {
           type = 'float',
           relative = 'editor',
           border = 'rounded',
-          title = 'Preview',
+          title = ' Preview ',
           title_pos = 'center',
           position = { -1, -2 },
           size = { width = 0.3, height = 0.3 },
