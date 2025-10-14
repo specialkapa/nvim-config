@@ -1,71 +1,97 @@
 return {
-  'shaunsingh/nord.nvim',
-  lazy = false,
+  'catppuccin/nvim',
+  name = 'catppuccin',
   priority = 1000,
-
   config = function()
-    vim.g.nord_contrast = true
-    vim.g.nord_borders = false
-    vim.g.nord_disable_background = true
-    vim.g.nord_italic = false
-    vim.g.nord_uniform_diff_background = true
-    vim.g.nord_bold = false
-    vim.g.nord_cursorline_transparent = false
+    local catppuccin = require 'catppuccin'
 
-    local transparent_groups = {
-      'Normal',
-      'NormalNC',
-      'NormalFloat',
-      'FloatBorder',
-      'WinSeparator',
-      'SignColumn',
-      'StatusLine',
-      'StatusLineNC',
-      'TelescopeNormal',
-      'TelescopeBorder',
-      'TelescopePromptNormal',
-      'TelescopePromptBorder',
-      'TroubleNormal',
-      'TroubleNormalNC',
-      'DiagnosticFloatingError',
-      'DiagnosticFloatingWarn',
-      'DiagnosticFloatingInfo',
-      'DiagnosticFloatingHint',
-      'LazyNormal',
-      'WhichKeyFloat',
-      'NoicePopup',
+    local base_config = {
+      flavour = 'auto',
+      background = {
+        light = 'latte',
+        dark = 'mocha',
+      },
+      transparent_background = false,
+      float = {
+        transparent = true,
+        solid = false,
+      },
+      show_end_of_buffer = false,
+      term_colors = false,
+      dim_inactive = {
+        enabled = false,
+        shade = 'dark',
+        percentage = 0.15,
+      },
+      no_italic = false,
+      no_bold = false,
+      no_underline = false,
+      styles = {
+        comments = { 'italic' },
+        conditionals = { 'italic' },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+        -- miscs = {}, -- Uncomment to turn off hard-coded styles
+      },
+      lsp_styles = {
+        virtual_text = {
+          errors = { 'italic' },
+          hints = { 'italic' },
+          warnings = { 'italic' },
+          information = { 'italic' },
+          ok = { 'italic' },
+        },
+        underlines = {
+          errors = { 'underline' },
+          hints = { 'underline' },
+          warnings = { 'underline' },
+          information = { 'underline' },
+          ok = { 'underline' },
+        },
+        inlay_hints = {
+          background = true,
+        },
+      },
+      color_overrides = {},
+      custom_highlights = {},
+      default_integrations = true,
+      auto_integrations = false,
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        notify = false,
+        mini = {
+          enabled = true,
+          indentscope_color = '',
+        },
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+      },
     }
 
-    local function apply_transparent_background()
-      if not vim.g.nord_disable_background then
-        return
-      end
+    local transparency_enabled = base_config.transparent_background or false
 
-      for _, group in ipairs(transparent_groups) do
-        vim.api.nvim_set_hl(0, group, { bg = 'none', ctermbg = 'none' })
-      end
+    local function apply_theme()
+      local config = vim.deepcopy(base_config)
+      config.transparent_background = transparency_enabled
+
+      catppuccin.setup(config)
+      vim.cmd.colorscheme 'catppuccin'
     end
 
-    local transparency_augroup = vim.api.nvim_create_augroup('NordTransparentBackground', { clear = true })
-    vim.api.nvim_create_autocmd('ColorScheme', {
-      group = transparency_augroup,
-      pattern = 'nord',
-      callback = apply_transparent_background,
-    })
+    apply_theme()
 
-    require('nord').set()
-    apply_transparent_background()
-
-    -- Toggle background transparency
-    local bg_transparent = true
-
-    local toggle_transparency = function()
-      bg_transparent = not bg_transparent
-      vim.g.nord_disable_background = bg_transparent
-      vim.cmd [[colorscheme nord]]
-      apply_transparent_background()
-    end
-
-    vim.keymap.set('n', '<leader>bg', toggle_transparency, { noremap = true, silent = true })
+    vim.keymap.set('n', '<leader>bg', function()
+      transparency_enabled = not transparency_enabled
+      apply_theme()
+    end, { desc = 'Toggle background transparency', noremap = true, silent = true })
   end,
 }
