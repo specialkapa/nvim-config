@@ -148,33 +148,4 @@ return {
     },
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
-  config = function(_, opts)
-    -- Setup barbar
-    require('barbar').setup(opts)
-
-    -- 🔹 Custom highlight autocommand for focused/unfocused buffers
-    vim.api.nvim_create_autocmd('ColorScheme', {
-      callback = function()
-        -- Focused buffer: bright green
-        vim.api.nvim_set_hl(0, 'BufferCurrent', { fg = '#B4C424', bold = true })
-        vim.api.nvim_set_hl(0, 'BufferCurrentMod', { fg = '#B4C424', bold = true })
-        vim.api.nvim_set_hl(0, 'BufferCurrentSign', { fg = '#B4C424', bold = true })
-        vim.api.nvim_set_hl(0, 'BufferCurrentTarget', { fg = '#B4C424', bold = true })
-
-        -- Unfocused buffers: white
-        vim.api.nvim_set_hl(0, 'BufferVisible', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferVisibleMod', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferVisibleSign', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferVisibleTarget', { fg = '#FFFFFF' })
-
-        vim.api.nvim_set_hl(0, 'BufferInactive', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferInactiveMod', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferInactiveSign', { fg = '#FFFFFF' })
-        vim.api.nvim_set_hl(0, 'BufferInactiveTarget', { fg = '#FFFFFF' })
-      end,
-    })
-
-    -- Run once at startup (apply immediately)
-    vim.cmd 'doautocmd ColorScheme'
-  end,
 }
