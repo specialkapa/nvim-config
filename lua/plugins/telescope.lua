@@ -88,7 +88,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
             enabled = true,
           },
           icons = {
-            history = '',
+            history = '',
             command = ' ',
             number = '󰴍 ',
             system = '',
