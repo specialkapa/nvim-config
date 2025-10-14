@@ -41,3 +41,5 @@ require('lazy').setup {
   require 'plugins.search-n-replace',
   require 'plugins.python-utils',
 }
+
+require 'timer'
