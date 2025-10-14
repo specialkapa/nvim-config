@@ -2,7 +2,7 @@ return {
   'Isrothy/neominimap.nvim',
   version = 'v3.x.x',
   lazy = false, -- NOTE: NO NEED to Lazy load
-  -- Optional. You can alse set your own keybindings
+  -- Optional. You can also set your own keybindings
   keys = {
     -- Global Minimap Controls
     { '<leader>nm', '<cmd>Neominimap Toggle<cr>', desc = 'Toggle global minimap' },
