@@ -40,6 +40,7 @@ require('lazy').setup {
   require 'plugins.todo-comments',
   require 'plugins.search-n-replace',
   require 'plugins.python-utils',
+  require 'plugins.noice',
 }
 
-require 'timer'
+dofile(vim.fn.stdpath 'config' .. '/timer.lua')

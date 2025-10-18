@@ -106,3 +106,8 @@ vim.keymap.set('n', '<leader>j', '*``cgn', opts)
 
 -- mapping visual block mode to Atl + V
 vim.keymap.set('n', '<A-v>', '<C-v>', opts)
+
+-- load last session (refer to https://github.com/folke/persistence.nvim)
+vim.keymap.set('n', '<leader>ql', function()
+  require('persistence').load { last = true }
+end)

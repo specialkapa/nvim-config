@@ -16,6 +16,13 @@ return {
     -- Hints keybinds
     'folke/which-key.nvim',
     event = 'VeryLazy',
+    opts = {
+      preset = 'helix',
+      win = {
+        title = ' vim-key-dex ',
+        title_pos = 'center',
+      },
+    },
   },
   {
     -- Autoclose parentheses, brackets, quotes, etc.
@@ -51,5 +58,13 @@ return {
   },
   {
     'github/copilot.vim', -- depends on node.js. Make sure it is installed
+  },
+  -- Lua
+  {
+    'folke/persistence.nvim',
+    event = 'BufReadPre', -- this will only start session saving when an actual file was opened
+    opts = {
+      -- add any custom options here
+    },
   },
 }

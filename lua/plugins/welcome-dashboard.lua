@@ -99,13 +99,14 @@ local function layout()
   ---@return table
   lazycache.menu = function()
     return {
-      button('space s.', '   Find recent files'),
-      button('space sf', '   Find file'),
-      button('space sg', '   Find reference'),
-      button('space e', '    Toggle file tree'),
-      button('n', '    New file', '<Cmd>ene<CR>'),
-      button('p', '    Plugins', '<Cmd>Lazy<CR>'),
-      button('q', '    Quit', '<Cmd>qa<CR>'),
+      button('󱁐 s.', '  Find recent files'),
+      button('󱁐 sf', '  Find file'),
+      button('󱁐 sg', '  Find reference'),
+      button('󱁐 ql', '  Load last session'),
+      button('󱁐 e', '  Toggle file tree'),
+      button('n', '  New file', '<Cmd>ene<CR>'),
+      button('p', '  Plugins', '<Cmd>Lazy<CR>'),
+      button('q', '  Quit', '<Cmd>qa<CR>'),
     }
   end
 

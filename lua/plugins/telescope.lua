@@ -3,7 +3,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
   event = 'VimEnter',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'jonarrien/telescope-cmdline.nvim',
     { -- If encountering errors, see telescope-fzf-native README for installation instructions
       'nvim-telescope/telescope-fzf-native.nvim',
 
@@ -48,11 +47,17 @@ return { -- Fuzzy Finder (files, lsp, etc)
       -- You can put your default mappings / updates / etc. in here
       --  All the info you're looking for is in `:help telescope.setup()`
       --
-      -- defaults = {
-      --   mappings = {
-      --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-      --   },
-      -- },
+      defaults = {
+        --   mappings = {
+        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        --   },
+        sorting_strategy = 'ascending',
+        layout_config = {
+          horizontal = {
+            prompt_position = 'top',
+          },
+        },
+      },
       pickers = {
         find_files = {
           file_ignore_patterns = { 'node_modules', '.git', '.venv' },
@@ -165,7 +170,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
     vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.keymap.set('n', '<leader>st', '<cmd>TodoTelescope<CR>', { desc = '[S]earch [T]ODOs' })
-    vim.keymap.set('n', 'Q', ':Telescope cmdline<CR>', { noremap = true, desc = '[S]earch [C]mdline' })
     vim.keymap.set('n', '<leader>fd', ' :Telescope find_files cwd=', { desc = 'Search in directory' })
     -- Slightly advanced example of overriding default behavior and theme
     vim.keymap.set('n', '<leader>/', function()
