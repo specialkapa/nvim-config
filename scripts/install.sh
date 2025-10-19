@@ -198,6 +198,8 @@ install_if_not_exists ripgrep rg
 install_if_not_exists fzf
 install_if_not_exists fd
 install_if_not_exists eza
+install_if_not_exists lazygit
+install_with_brew lazydocker
 install_if_not_exists neovim nvim
 
 if [ ! -d "$HOME/.config" ]; then
