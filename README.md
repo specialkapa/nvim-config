@@ -1,7 +1,12 @@
-# TODOs
+# nvim config
 
-- [ ] document dependencies
-- [ ] document end to end set up
-- [ ] accompany set up with script that bootstraps everything from scratch
-- [ ] do not format .vimrc (which is not really maintained in this repo)
-- [ ] document copilot, codex and claude-code dependencies
+This is my `neovim` config. On a machine without `neovim` just run the
+[intall.sh](./scripts/install.sh) script:
+
+```bash
+cd $HOME
+curl -fsSL https://raw.githubusercontent.com/specialkapa/nvim-config/main/script/install.sh | bash
+```
+
+> [!WARNING]
+> The installation script accommodates only Ubuntu and ArchLinux distros.
