@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #------------------------------------------------------------------------------
 # Displays an error message in bold red text with an icon.
 # Globals:
