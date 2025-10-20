@@ -8,6 +8,27 @@ return {
         ['vim.lsp.util.stylize_markdown'] = true,
         ['cmp.entry.get_documentation'] = true,
       },
+      progress = {
+        enabled = true,
+        format = {
+          {
+            '{progress} ',
+            key = 'progress.percentage',
+            contents = {
+              { '{data.progress.message} ' },
+            },
+          },
+          '({data.progress.percentage}%) ',
+          { '{spinner} ', hl_group = 'NoiceLspProgressSpinner' },
+          { '{data.progress.title} ', hl_group = 'NoiceLspProgressTitle' },
+          { '{data.progress.client} ', hl_group = 'NoiceLspProgressClient' },
+        },
+        format_done = {
+          { '󰸞 ', hl_group = 'NoiceLspProgressSpinner' },
+          { '{data.progress.title} ', hl_group = 'NoiceLspProgressTitle' },
+          { '{data.progress.client} ', hl_group = 'NoiceLspProgressClient' },
+        },
+      },
     },
     routes = {
       {
@@ -29,8 +50,8 @@ return {
       lsp_doc_border = true, -- add a border to hover docs and signature help
     },
   },
-    -- stylua: ignore
-    keys = {
+  -- stylua: ignore
+  keys = {
       { "<leader>sn", "", desc = "+noice"},
       { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
       { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
