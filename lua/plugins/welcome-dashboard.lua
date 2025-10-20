@@ -29,6 +29,39 @@ local function layout()
     return { type = 'button', val = txt, on_press = on_press, opts = opts }
   end
 
+  local function system_icon()
+    if vim.fn.has 'win32' == 1 then
+      return ''
+    end
+    if vim.fn.has 'macunix' == 1 then
+      return ''
+    end
+
+    local ok, lines = pcall(vim.fn.readfile, '/etc/os-release')
+    if ok then
+      local distro
+      for _, line in ipairs(lines) do
+        local key, value = line:match '^(%w+)=(.+)$'
+        if key == 'ID' then
+          distro = value:gsub('^"(.*)"$', '%1'):lower()
+          break
+        end
+      end
+
+      if distro then
+        local icons = {
+          ubuntu = '',
+          arch = '󰣇',
+          archlinux = '󰣇',
+          omarchy = '󰈸',
+        }
+        return icons[distro] or ''
+      end
+    end
+
+    return ''
+  end
+
   math.randomseed(os.time())
   local header_color = 'AlphaCol' .. math.random(11)
 
@@ -78,8 +111,7 @@ local function layout()
     local bar = string.format('%s%s', string.rep('█', filled), string.rep('░', bar_length - filled))
     local v = vim.version()
     local datetime = os.date ' %d-%m-%Y   %H:%M:%S'
-    local platform = vim.fn.has 'win32' == 1 and '' or ''
-    local top_line = string.format('%s Neovim %d.%d.%d  %s', platform, v.major, v.minor, v.patch, datetime)
+    local top_line = string.format('%s Neovim %d.%d.%d  %s', system_icon(), v.major, v.minor, v.patch, datetime)
     local progress_line = string.format('%s  %d/%d plugins loaded', bar, loaded, total)
     local progress_hl = loaded == total and 'AlphaProgressLoaded' or 'AlphaProgressPending'
     return {
