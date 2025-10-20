@@ -196,7 +196,7 @@ fi
 install_cargo_package grip-grab
 install_if_not_exists ripgrep rg
 install_if_not_exists fzf
-install_if_not_exists fd
+install_if_not_exists fd-find fd
 install_if_not_exists eza
 install_if_not_exists lazygit
 install_with_brew lazydocker
