@@ -187,6 +187,9 @@ fi
 
 if ! command_exists brew; then
     if /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; then
+        echo >>/home/tnpadmin/.bashrc
+        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>/home/tnpadmin/.bashrc
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         show_success "homebrew installation complete."
     else
         show_error "homebrew installation failed."
