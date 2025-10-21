@@ -24,11 +24,10 @@ require('lazy').setup {
   require 'plugins.lsp',
   require 'plugins.autocompletion',
   require 'plugins.none-ls',
-  require 'plugins.gitsigns',
   require 'plugins.welcome-dashboard',
   require 'plugins.indent-blankline',
   require 'plugins.misc',
-  require 'plugins.lazygit',
+  require 'plugins.git',
   require 'plugins.lazydocker',
   require 'plugins.toggleterm',
   require 'plugins.comment',
@@ -43,5 +42,3 @@ require('lazy').setup {
   require 'plugins.noice',
   require 'plugins.flash-nvim',
 }
-
-dofile(vim.fn.stdpath 'config' .. '/timer.lua')
