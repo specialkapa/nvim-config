@@ -1,6 +1,7 @@
 return {
   'nvim-lualine/lualine.nvim',
   event = 'VeryLazy',
+  dependencies = { 'f-person/git-blame.nvim' },
   config = function()
     local mode = {
       'mode',
@@ -25,7 +26,7 @@ return {
       sources = { 'nvim_diagnostic' },
       sections = { 'error', 'warn' },
       symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
-      colored = false,
+      colored = true,
       update_in_insert = false,
       always_visible = false,
       cond = hide_in_width,
@@ -33,9 +34,22 @@ return {
 
     local diff = {
       'diff',
-      colored = false,
+      colored = true,
       symbols = { added = ' ', modified = ' ', removed = ' ' }, -- changes diff symbols
       cond = hide_in_width,
+    }
+
+    local git_blame = require 'gitblame'
+
+    local git_blame_icon_hl = 'LualineGitBlameIcon'
+    vim.api.nvim_set_hl(0, git_blame_icon_hl, { fg = '#f38ba8' })
+
+    local git_blame_component = {
+      function()
+        local icon = '%#' .. git_blame_icon_hl .. '#%*'
+        return icon .. git_blame.get_current_blame_text()
+      end,
+      cond = git_blame.is_blame_text_available,
     }
 
     require('lualine').setup {
@@ -54,7 +68,14 @@ return {
         lualine_a = { mode },
         lualine_b = { 'branch' },
         lualine_c = { filename },
-        lualine_x = { diagnostics, diff, { 'encoding', cond = hide_in_width }, { 'filetype', cond = hide_in_width } },
+        lualine_x = {
+          require('pomodoro').statusline,
+          git_blame_component,
+          diff,
+          diagnostics,
+          { 'encoding', cond = hide_in_width },
+          { 'filetype', cond = hide_in_width },
+        },
         lualine_y = { 'location' },
         lualine_z = { 'progress' },
       },
