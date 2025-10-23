@@ -43,3 +43,5 @@ vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- Don't insert the current comme
 vim.opt.runtimepath:remove '/usr/share/vim/vimfiles' -- Separate Vim plugins from Neovim in case Vim still in use (default: includes this path if Vim is installed)
 vim.opt.cursorline = true
 vim.opt.statuscolumn = '%s %{v:relnum} %{v:lnum} ' -- Relative and absolute line numbers in status column
+vim.opt.shell = '/bin/bash' -- Use bash as default shell
+vim.opt.shellcmdflag = '-c' -- Use -c flag for bash
