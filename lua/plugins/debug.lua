@@ -5,6 +5,7 @@ return {
     'rcarriga/nvim-dap-ui',
     'nvim-neotest/nvim-nio',
     'theHamsta/nvim-dap-virtual-text',
+    'LiadOz/nvim-dap-repl-highlights',
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
@@ -40,6 +41,7 @@ return {
     require('nvim-dap-virtual-text').setup {
       commented = true,
     }
+    require('nvim-dap-repl-highlights').setup()
 
     vim.fn.sign_define('DapBreakpoint', {
       text = '',
@@ -62,24 +64,56 @@ return {
       numhl = 'DiagnosticSignWarn',
     })
 
+    dap.configurations = {
+      python = {
+        {
+          -- The first three options are required by nvim-dap
+          type = 'python', -- the type here established the link to the adapter definition: `dap.adapters.python`
+          request = 'launch',
+          name = 'Launch file',
+
+          -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+          program = '${file}', -- This configuration will launch the current file if used.
+          pythonPath = function()
+            -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+            -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+            -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+            local cwd = vim.fn.getcwd()
+            if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
+              return cwd .. '/venv/bin/python'
+            elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
+              return cwd .. '/.venv/bin/python'
+            else
+              return '/usr/bin/python'
+            end
+          end,
+        },
+      },
+    }
+
     -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<leader>rb', dap.clear_breakpoints)
+    vim.keymap.set('n', '<leader>rb', dap.clear_breakpoints, { desc = '[R]emove all [B]reakpoints' })
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
     vim.keymap.set('n', '<C-F5>', dap.run_last, { desc = 'Debug: Restart' })
     vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
-    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
+    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Toggle [B]reakpoint' })
+
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+
     vim.keymap.set('n', '<space>?', function()
       require('dapui').eval(nil, { enter = true })
     end, { desc = 'Debug: show value in floating box' })
-    vim.keymap.set('n', '<leader>de', function()
-      require('dapui').eval()
-      require('dapui').eval()
-    end, { desc = 'Debug: Evaluate expression' })
+
+    vim.keymap.set('x', '<leader>ss', function()
+      local lines = vim.fn.getregion(vim.fn.getpos '.', vim.fn.getpos 'v')
+      dap.repl.open()
+      dap.repl.execute(table.concat(lines, '\n'))
+    end, { desc = 'Debug: [S]end [S]election to REPL' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
