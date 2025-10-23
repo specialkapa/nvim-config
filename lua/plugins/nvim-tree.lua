@@ -336,6 +336,14 @@ return {
       },
     } -- END_DEFAULT_OPTS
 
+    vim.api.nvim_create_autocmd('BufEnter', {
+      callback = function()
+        if vim.bo.filetype == 'NvimTree' then
+          vim.wo.statuscolumn = ''
+        end
+      end,
+    })
+
     -- forward rename events to pymple so python imports stay in sync
     if not vim.g._pymple_nvim_tree_renamed_hook then
       setup_pymple_integration()
