@@ -34,6 +34,7 @@ return { -- Autocompletion
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
+    'rcarriga/cmp-dap',
   },
   config = function()
     -- See `:help cmp`
@@ -157,6 +158,7 @@ return { -- Autocompletion
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
+        { name = 'dap' },
       },
       formatting = {
         fields = { 'kind', 'abbr', 'menu' },
@@ -171,6 +173,9 @@ return { -- Autocompletion
           return vim_item
         end,
       },
+      enabled = function()
+        return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
+      end,
     }
   end,
 }
