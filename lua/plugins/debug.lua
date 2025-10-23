@@ -50,6 +50,13 @@ return {
       numhl = '',
     })
 
+    vim.fn.sign_define('DapBreakpointCondition', {
+      text = '',
+      texthl = 'DapBreakpointCondition',
+      linehl = '',
+      numhl = '',
+    })
+
     vim.fn.sign_define('DapBreakpointRejected', {
       text = '',
       texthl = 'DiagnosticSignError',
