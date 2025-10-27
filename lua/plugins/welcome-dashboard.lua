@@ -208,6 +208,9 @@ local function layout()
   }
 end
 
+local default_statuscolumn = vim.o.statuscolumn
+local alpha_statuscolumn = ' %s'
+
 return {
   'goolord/alpha-nvim',
   event = 'VimEnter',
@@ -224,6 +227,7 @@ return {
             callback = function()
               vim.go.laststatus = 0
               vim.opt.showtabline = 0
+              vim.opt_local.statuscolumn = alpha_statuscolumn
             end,
           })
           vim.api.nvim_create_autocmd('BufUnload', {
@@ -232,6 +236,7 @@ return {
             callback = function()
               vim.go.laststatus = 3
               vim.opt.showtabline = 2
+              vim.opt_local.statuscolumn = default_statuscolumn
             end,
           })
         end,
