@@ -45,6 +45,22 @@ return {
         return term.name
       end,
     },
+    on_open = function(term)
+      local win = term.window
+      if not win or not vim.api.nvim_win_is_valid(win) then
+        return
+      end
+      -- Strip number and status columns from terminal windows for a cleaner view
+      local options = {
+        number = false,
+        relativenumber = false,
+        signcolumn = 'no',
+        statuscolumn = ' ',
+      }
+      for option, value in pairs(options) do
+        vim.api.nvim_set_option_value(option, value, { win = win, scope = 'local' })
+      end
+    end,
     responsiveness = {
       -- breakpoint in terms of `vim.o.columns` at which terminals will start to stack on top of each other
       -- instead of next to each other
