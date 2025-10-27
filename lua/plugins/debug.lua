@@ -99,6 +99,23 @@ return {
       },
     }
 
+    local function ensure_dap_repl_visible()
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local ft = vim.bo[buf].filetype
+        if ft == 'dapui_repl' or ft == 'dap-repl' then
+          return
+        end
+      end
+
+      local ok, dapui_module = pcall(require, 'dapui')
+      if ok then
+        dapui_module.open { reset = false }
+      else
+        dap.repl.open()
+      end
+    end
+
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<leader>rb', dap.clear_breakpoints, { desc = '[R]emove all [B]reakpoints' })
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -118,7 +135,7 @@ return {
 
     vim.keymap.set('x', '<leader>ss', function()
       local lines = vim.fn.getregion(vim.fn.getpos '.', vim.fn.getpos 'v')
-      dap.repl.open()
+      ensure_dap_repl_visible()
       dap.repl.execute(table.concat(lines, '\n'))
     end, { desc = 'Debug: [S]end [S]election to REPL' })
 
@@ -142,7 +159,53 @@ return {
           disconnect = '⏏',
         },
       },
+      layouts = {
+        {
+          elements = {
+            { id = 'scopes', size = 0.25 },
+            'breakpoints',
+            'stacks',
+            'watches',
+          },
+          size = 40,
+          position = 'left',
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+          },
+          size = 40,
+          position = 'right',
+        },
+      },
     }
+
+    -- Remove line numbers from DAP UI windows. Some panes re-enable them, so guard on multiple events.
+    local function strip_dapui_numbers(win)
+      pcall(vim.api.nvim_win_set_option, win, 'statuscolumn', '')
+      pcall(vim.api.nvim_win_set_option, win, 'number', false)
+      pcall(vim.api.nvim_win_set_option, win, 'relativenumber', false)
+    end
+    local dapui_filetypes = {
+      dapui_scopes = true,
+      dapui_breakpoints = true,
+      dapui_stacks = true,
+      dapui_watches = true,
+      dapui_console = true,
+      dapui_repl = true,
+      ['dap-repl'] = true,
+      dapui_hover = true,
+    }
+
+    vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter', 'WinEnter', 'TermEnter' }, {
+      callback = function(args)
+        local ft = vim.bo[args.buf].filetype
+        if not dapui_filetypes[ft] then
+          return
+        end
+        strip_dapui_numbers(args.win or vim.api.nvim_get_current_win())
+      end,
+    })
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })

@@ -83,6 +83,7 @@ return {
       local iron = require 'iron.core'
       local view = require 'iron.view'
       local common = require 'iron.fts.common'
+      local dap = require 'dap'
 
       iron.setup {
         config = {
@@ -167,6 +168,36 @@ return {
       -- iron also has a list of commands, see :h iron-commands for all available commands
       vim.keymap.set('n', '<space>rf', '<cmd>IronFocus<cr>')
       vim.keymap.set('n', '<space>rh', '<cmd>IronHide<cr>')
+
+      local function ensure_dap_repl_visible()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          local ft = vim.bo[buf].filetype
+          if ft == 'dapui_repl' or ft == 'dap-repl' then
+            return
+          end
+        end
+
+        local ok, dapui_module = pcall(require, 'dapui')
+        if ok then
+          dapui_module.open { reset = false }
+        else
+          dap.repl.open()
+        end
+      end
+
+      local iron_dap = require 'iron.dap'
+      iron_dap.send_to_dap = function(lines)
+        local text
+        if type(lines) == 'table' then
+          text = table.concat(lines, '\n'):gsub('\r', '')
+        else
+          text = lines
+        end
+
+        ensure_dap_repl_visible()
+        dap.repl.execute(text)
+      end
     end,
   },
 }
