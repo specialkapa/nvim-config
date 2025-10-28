@@ -117,4 +117,53 @@ return {
       }
     end,
   },
+  {
+    'NickvanDyke/opencode.nvim',
+    dependencies = {
+      -- Recommended for `ask()` and `select()`.
+      -- Required for default `toggle()` implementation.
+      { 'folke/snacks.nvim', opts = { input = {}, picker = {}, terminal = {} } },
+    },
+    config = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {
+        -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
+      }
+
+      -- Required for `vim.g.opencode_opts.auto_reload`.
+      vim.o.autoread = true
+
+      -- Recommended/example keymaps.
+      vim.keymap.set({ 'n', 'x' }, '<leader>oa', function()
+        require('opencode').ask('@this: ', { submit = true })
+      end, { desc = '[O]penCode: [A]sk about this' })
+      vim.keymap.set({ 'n', 'x' }, '<leader>os', function()
+        require('opencode').select()
+      end, { desc = '[O]penCode: [S]elect prompt' })
+      vim.keymap.set({ 'n', 'x' }, '<leader>o+', function()
+        require('opencode').prompt '@this'
+      end, { desc = '[O]penCode: [A]dd this' })
+      vim.keymap.set('n', '<leader>ot', function()
+        require('opencode').toggle()
+      end, { desc = '[O]penCode: [T]oggle embedded' })
+      vim.keymap.set('n', '<leader>oc', function()
+        require('opencode').command()
+      end, { desc = '[O]penCode: Select [C]ommand' })
+      vim.keymap.set('n', '<leader>on', function()
+        require('opencode').command 'session_new'
+      end, { desc = '[O]penCode: [N]ew session' })
+      vim.keymap.set('n', '<leader>oi', function()
+        require('opencode').command 'session_interrupt'
+      end, { desc = '[O]penCode: [I]nterrupt session' })
+      vim.keymap.set('n', '<leader>oA', function()
+        require('opencode').command 'agent_cycle'
+      end, { desc = '[O]penCode: Cycle selected [A]gent' })
+      vim.keymap.set('n', '<S-C-u>', function()
+        require('opencode').command 'messages_half_page_up'
+      end, { desc = 'Messages half page up' })
+      vim.keymap.set('n', '<S-C-d>', function()
+        require('opencode').command 'messages_half_page_down'
+      end, { desc = 'Messages half page down' })
+    end,
+  },
 }
