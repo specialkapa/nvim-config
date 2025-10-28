@@ -17,6 +17,11 @@ return {
   },
   config = function()
     local dap = require 'dap'
+
+    -- Preload our patched dapui REPL element so nvim-dap-ui picks it up
+    -- before it tries to require the module during setup.
+    pcall(require, 'dapui.elements.repl')
+
     local dapui = require 'dapui'
 
     require('mason-nvim-dap').setup {
