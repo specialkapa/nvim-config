@@ -12,7 +12,7 @@ show_error() {
 # Displays a success message in bold green text with a checkmark.
 #------------------------------------------------------------------------------
 show_success() {
-    echo -e "\033[92;1m✔ $1\033[0m" >&2
+    echo -e "\033[92;1m $1\033[0m" >&2
 }
 
 #------------------------------------------------------------------------------
@@ -158,6 +158,16 @@ if curl -LsSf https://astral.sh/uv/install.sh | sh; then
     show_success "uv installation complete."
 else
     show_error "uv installation failed."
+fi
+
+if command_exists opencode; then
+    show_warning "opencode is already installed."
+else
+    if curl -fsSL https://opencode.ai/install | bash; then
+        show_success "opencode installation complete."
+    else
+        show_error "opencode installation failed."
+    fi
 fi
 
 if curl https://sh.rustup.rs -sSf | sh -s -- -y; then
