@@ -49,10 +49,6 @@ return {
     end,
   },
   {
-    'github/copilot.vim', -- depends on node.js. Make sure it is installed
-  },
-  -- Lua
-  {
     'folke/persistence.nvim',
     event = 'BufReadPre', -- this will only start session saving when an actual file was opened
     opts = {
@@ -69,23 +65,6 @@ return {
         time_break_long = 10,
         timers_break_long = 3,
       }
-    end,
-  },
-  {
-    'kristijanhusak/vim-dadbod-ui',
-    dependencies = {
-      { 'tpope/vim-dadbod', lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true }, -- Optional
-    },
-    cmd = {
-      'DBUI',
-      'DBUIToggle',
-      'DBUIAddConnection',
-      'DBUIFindBuffer',
-    },
-    init = function()
-      -- Your DBUI configuration
-      vim.g.db_ui_use_nerd_fonts = 1
     end,
   },
 }
