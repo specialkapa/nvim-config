@@ -41,4 +41,5 @@ require('lazy').setup {
   require 'plugins.python-utils',
   require 'plugins.noice',
   require 'plugins.flash-nvim',
+  require 'plugins.db-utils',
 }
