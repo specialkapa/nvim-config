@@ -1,6 +1,6 @@
 return { -- Autocompletion
   'hrsh7th/nvim-cmp',
-  event = 'InsertEnter',
+  event = { 'InsertEnter', 'CmdlineEnter' },
   dependencies = {
     -- Snippet Engine & its associated nvim-cmp source
     {
@@ -29,11 +29,13 @@ return { -- Autocompletion
     'saadparwaiz1/cmp_luasnip',
 
     -- Adds other completion capabilities.
-    --  nvim-cmp does not ship with all sources by default. They are split
-    --  into multiple repos for maintenance purposes.
+    -- nvim-cmp does not ship with all sources by default. They are split
+    -- into multiple repos for maintenance purposes.
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'dmitmel/cmp-cmdline-history',
     'rcarriga/cmp-dap',
   },
   config = function()
@@ -177,5 +179,23 @@ return { -- Autocompletion
         return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
       end,
     }
+
+    -- Configure command-line completion once cmp is available.
+    cmp.setup.cmdline(':', {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = 'path' },
+      }, {
+        { name = 'cmdline' },
+        { name = 'cmdline_history' },
+      }),
+    })
+
+    cmp.setup.cmdline({ '/', '?' }, {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = 'buffer' },
+      },
+    })
   end,
 }
