@@ -71,7 +71,36 @@ return { -- Autocompletion
       Operator = '󰆕',
       TypeParameter = '󰊄',
     }
+    local border = {
+      { '╭', 'CmpBorder' },
+      { '─', 'CmpBorder' },
+      { '╮', 'CmpBorder' },
+      { '│', 'CmpBorder' },
+      { '╯', 'CmpBorder' },
+      { '─', 'CmpBorder' },
+      { '╰', 'CmpBorder' },
+      { '│', 'CmpBorder' },
+    }
+
+    local border = {
+      { '╭', 'CmpBorder' },
+      { '─', 'CmpBorder' },
+      { '╮', 'CmpBorder' },
+      { '│', 'CmpBorder' },
+      { '╯', 'CmpBorder' },
+      { '─', 'CmpBorder' },
+      { '╰', 'CmpBorder' },
+      { '│', 'CmpBorder' },
+    }
     cmp.setup {
+      window = {
+        documentation = {
+          border = border,
+        },
+        completion = {
+          border = border,
+        },
+      },
       snippet = {
         expand = function(args)
           luasnip.lsp_expand(args.body)
