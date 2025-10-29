@@ -144,6 +144,10 @@ return {
       dap.repl.execute(table.concat(lines, '\n'))
     end, { desc = 'Debug: [S]end [S]election to REPL' })
 
+    vim.keymap.set('n', '<leader>gt', function()
+      require('nio').goto_()
+    end, { desc = 'Debug: [G]o [T]o cursor' })
+
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
