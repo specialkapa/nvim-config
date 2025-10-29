@@ -111,3 +111,8 @@ vim.keymap.set('n', '<A-v>', '<C-v>', opts)
 vim.keymap.set('n', '<leader>ql', function()
   require('persistence').load { last = true }
 end)
+
+-- jump to the top of the context window
+vim.keymap.set('n', '[c', function()
+  require('treesitter-context').go_to_context(vim.v.count1)
+end, { silent = true })
