@@ -112,6 +112,16 @@ vim.keymap.set('n', '<leader>ql', function()
   require('persistence').load { last = true }
 end)
 
+-- load session for current working directory (refer to https://github.com/folke/persistence.nvim)
+vim.keymap.set('n', '<leader>qc', function()
+  require('persistence').load()
+end)
+
+-- select a session to load (refer to https://github.com/folke/persistence.nvim)
+vim.keymap.set('n', '<leader>qS', function()
+  require('persistence').select()
+end)
+
 -- jump to the top of the context window
 vim.keymap.set('n', '[c', function()
   require('treesitter-context').go_to_context(vim.v.count1)
