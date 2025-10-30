@@ -10,6 +10,7 @@ return {
         return vim.fn.executable 'make' == 1
       end,
     },
+    { 'nvim-telescope/telescope-file-browser.nvim' },
     { 'nvim-telescope/telescope-ui-select.nvim' },
     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
   },
@@ -42,6 +43,9 @@ return {
       extensions = {
         ['ui-select'] = {
           require('telescope.themes').get_dropdown(),
+        },
+        file_browser = {
+          grouped = true,
         },
         cmdline = {
           picker = {
@@ -125,6 +129,7 @@ return {
     pcall(telescope.load_extension, 'ui-select')
     pcall(telescope.load_extension, 'cmdline')
     pcall(telescope.load_extension, 'dap')
+    pcall(telescope.load_extension, 'file_browser')
 
     local function map_pretty_files(lhs, picker, desc, opts)
       vim.keymap.set('n', lhs, function()
@@ -158,6 +163,7 @@ return {
     vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.keymap.set('n', '<leader>st', '<cmd>TodoTelescope<CR>', { desc = '[S]earch [T]ODOs' })
     vim.keymap.set('n', '<leader>fd', ' :Telescope find_files cwd=', { desc = 'Search in directory' })
+    vim.keymap.set('n', '<leader>fb', ' :Telescope file_browser<CR>', { desc = '[F]ile [B]rowser' })
 
     vim.keymap.set('n', '<leader>/', function()
       builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
