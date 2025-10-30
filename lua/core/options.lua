@@ -1,4 +1,4 @@
-vim.opt.colorcolumn = '79' -- Add ruler at 79th column
+vim.opt.colorcolumn = '79,100' -- Add ruler at 79th and 100th columns
 vim.wo.number = true -- Make line numbers default (default: false)
 vim.o.clipboard = 'unnamedplus' -- Sync clipboard between OS and Neovim. (default: '')
 vim.o.wrap = false -- Display lines as one long line (default: true)
