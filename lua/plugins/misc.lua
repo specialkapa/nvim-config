@@ -11,7 +11,7 @@ return {
     opts = {
       preset = 'helix',
       win = {
-        title = ' vim-key-dex ',
+        title = '   keybinds ',
         title_pos = 'center',
       },
     },
