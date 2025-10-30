@@ -45,3 +45,33 @@ vim.opt.cursorline = true
 vim.opt.statuscolumn = '%s %{v:relnum} %{v:lnum} ' -- Relative and absolute line numbers in status column
 vim.opt.shell = '/bin/bash' -- Use bash as default shell
 vim.opt.shellcmdflag = '-c' -- Use -c flag for bash
+vim.diagnostic.enable()
+
+vim.cmd [[
+    " LspDiagnostics highlights
+    highlight DiagnosticSignError guifg=#ff4040
+    highlight DiagnosticWarn guifg=#f8ed62
+    highlight DiagnosticInfo guifg=#71c7ec
+    highlight DiagnosticHint guifg=#adff00
+]]
+
+vim.api.nvim_create_autocmd('CursorHold', {
+  pattern = '*',
+  callback = function()
+    vim.diagnostic.open_float(nil, { focusable = false })
+  end,
+})
+
+vim.diagnostic.config {
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = true,
+  severity_sort = true,
+}
+
+local signs = { Error = ' ', Warn = ' ', Hint = ' ', Info = ' ' }
+for type, icon in pairs(signs) do
+  local hl = 'DiagnosticSign' .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
