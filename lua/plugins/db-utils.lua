@@ -41,7 +41,7 @@ return {
               -- Also try to disable via command if available
               pcall(function()
                 vim.api.nvim_buf_call(bufnr, function()
-                  vim.cmd('Neominimap BufDisable')
+                  vim.cmd 'Neominimap BufDisable'
                 end)
               end)
             end
