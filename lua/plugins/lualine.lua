@@ -69,7 +69,6 @@ return {
         lualine_b = { 'branch' },
         lualine_c = { filename },
         lualine_x = {
-          require('pomodoro').statusline,
           git_blame_component,
           diff,
           diagnostics,
