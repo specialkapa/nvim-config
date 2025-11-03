@@ -27,7 +27,7 @@ vim.o.showtabline = 2 -- Always show tabs (default: 1)
 vim.o.backspace = 'indent,eol,start' -- Allow backspace on (default: 'indent,eol,start')
 vim.o.pumheight = 10 -- Pop up menu height (default: 0)
 vim.o.conceallevel = 0 -- So that `` is visible in markdown files (default: 1)
-vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default (default: 'auto')
+vim.wo.signcolumn = 'yes' -- Keep sign column on by default (default: 'auto')
 vim.o.fileencoding = 'utf-8' -- The encoding written to a file (default: 'utf-8')
 vim.o.cmdheight = 1 -- More space in the Neovim command line for displaying messages (default: 1)
 vim.o.breakindent = true -- Enable break indent (default: false)
@@ -46,6 +46,7 @@ vim.opt.statuscolumn = '%s %{v:relnum} %{v:lnum} ' -- Relative and absolute line
 vim.opt.shell = '/bin/bash' -- Use bash as default shell
 vim.opt.shellcmdflag = '-c' -- Use -c flag for bash
 vim.diagnostic.enable()
+vim.opt.spell = true -- Enable spell checking
 
 vim.cmd [[
     " LspDiagnostics highlights
@@ -64,14 +65,27 @@ vim.api.nvim_create_autocmd('CursorHold', {
 
 vim.diagnostic.config {
   virtual_text = false,
-  signs = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = ' ',
+      [vim.diagnostic.severity.WARN] = ' ',
+      [vim.diagnostic.severity.HINT] = ' ',
+      [vim.diagnostic.severity.INFO] = ' ',
+    },
+    texthl = {
+      [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+      [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+      [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+      [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+    },
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+      [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+      [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+      [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+    },
+  },
   underline = true,
   update_in_insert = true,
   severity_sort = true,
 }
-
-local signs = { Error = ' ', Warn = ' ', Hint = ' ', Info = ' ' }
-for type, icon in pairs(signs) do
-  local hl = 'DiagnosticSign' .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end

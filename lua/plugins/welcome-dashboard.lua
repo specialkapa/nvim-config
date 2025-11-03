@@ -101,29 +101,14 @@ local function layout()
 
   ---@return table
   lazycache.info = function()
-    local stats = require('lazy').stats()
-    local total = stats.count or 0
-    local loaded = stats.loaded or 0
-    local progress = total > 0 and (loaded / total) or 0
-    local bar_length = 20
-    local filled = math.floor(progress * bar_length + 0.5)
-    filled = math.max(0, math.min(filled, bar_length))
-    local bar = string.format('%s%s', string.rep('█', filled), string.rep('░', bar_length - filled))
     local v = vim.version()
     local datetime = os.date ' %d-%m-%Y   %H:%M:%S'
     local top_line = string.format('%s Neovim %d.%d.%d  %s', system_icon(), v.major, v.minor, v.patch, datetime)
-    local progress_line = string.format('%s  %d/%d plugins loaded', bar, loaded, total)
-    local progress_hl = loaded == total and 'AlphaProgressLoaded' or 'AlphaProgressPending'
     return {
       {
         type = 'text',
         val = top_line,
         opts = { hl = header_color, position = 'center' },
-      },
-      {
-        type = 'text',
-        val = progress_line,
-        opts = { hl = progress_hl, position = 'center' },
       },
     }
   end
@@ -135,10 +120,10 @@ local function layout()
       button('󱁐 sf', '  Find file'),
       button('󱁐 sg', '  Find reference'),
       button('󱁐 ql', '  Load last session'),
-      button('󱁐 e', '  Toggle file tree'),
-      button('n', '  New file', '<Cmd>ene<CR>'),
-      button('p', '  Plugins', '<Cmd>Lazy<CR>'),
-      button('q', '  Quit', '<Cmd>qa<CR>'),
+      button('󱁐 e ', '  Toggle file tree'),
+      button('n ', '  New file', '<Cmd>ene<CR>'),
+      button('p ', '  Plugins', '<Cmd>Lazy<CR>'),
+      button('q ', '  Quit', '<Cmd>qa<CR>'),
     }
   end
 
