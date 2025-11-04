@@ -66,6 +66,15 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+local dapConsoleGroup = vim.api.nvim_create_augroup('UserDapConsoleLayout', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  group = dapConsoleGroup,
+  pattern = { 'dapui_console', 'dap-repl' },
+  callback = function()
+    vim.opt_local.colorcolumn = '' -- Hide ruler inside DAP console buffers
+  end,
+})
+
 vim.cmd [[
     " LspDiagnostics highlights
     highlight DiagnosticSignError guifg=#ff4040
