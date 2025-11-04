@@ -48,6 +48,24 @@ vim.opt.shellcmdflag = '-c' -- Use -c flag for bash
 vim.diagnostic.enable()
 vim.opt.spell = true -- Enable spell checking
 
+local terminalGroup = vim.api.nvim_create_augroup('UserTerminalSpell', { clear = true })
+vim.api.nvim_create_autocmd('TermOpen', {
+  group = terminalGroup,
+  pattern = '*',
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
+local uiSpellGroup = vim.api.nvim_create_augroup('UserUiSpell', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  group = uiSpellGroup,
+  pattern = { 'dapui_*', 'dbui', 'NvimTree' },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
 vim.cmd [[
     " LspDiagnostics highlights
     highlight DiagnosticSignError guifg=#ff4040
