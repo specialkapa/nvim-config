@@ -55,7 +55,7 @@ vim.keymap.set('n', '<leader>tn', ':tabn<CR>', with_desc 'Go to [N]ext [T]ab') -
 vim.keymap.set('n', '<leader>tp', ':tabp<CR>', with_desc 'Go to [R]revious [T]ab') --  go to previous tab
 vim.keymap.set('n', '<A-p>', '<Cmd>BufferPin<CR>', opts) -- pin/unpin buffer
 vim.keymap.set('n', '<C-p>', '<Cmd>BufferPick<CR>', opts) -- pick a buffer
-vim.keymap.set('n', '<C--p>', '<Cmd>BufferPickDelete<CR>', opts) -- pick a buffer
+vim.keymap.set('n', '<C-A-p>', '<Cmd>BufferPickDelete<CR>', opts) -- pick a buffer
 vim.keymap.set('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>', opts) -- move buffer left
 vim.keymap.set('n', '<A->>', '<Cmd>BufferMoveNext<CR>', opts) -- move buffer right
 
