@@ -165,6 +165,37 @@ return {
         ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
       }
 
+      local function disable_python_repl_numbers(bufnr)
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          if vim.api.nvim_win_get_buf(win) == bufnr then
+            vim.api.nvim_set_option_value('number', false, { win = win })
+            vim.api.nvim_set_option_value('relativenumber', false, { win = win })
+            vim.api.nvim_set_option_value('statuscolumn', ' ', { win = win })
+          end
+        end
+      end
+
+      local repl_number_group = vim.api.nvim_create_augroup('IronPythonReplNumbers', { clear = true })
+
+      vim.api.nvim_create_autocmd('TermOpen', {
+        group = repl_number_group,
+        pattern = 'term://*ipython*',
+        callback = function(event)
+          vim.api.nvim_buf_set_var(event.buf, 'iron_python_repl', true)
+          disable_python_repl_numbers(event.buf)
+        end,
+      })
+
+      vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter' }, {
+        group = repl_number_group,
+        callback = function(event)
+          local ok, is_repl = pcall(vim.api.nvim_buf_get_var, event.buf, 'iron_python_repl')
+          if ok and is_repl then
+            disable_python_repl_numbers(event.buf)
+          end
+        end,
+      })
+
       -- iron also has a list of commands, see :h iron-commands for all available commands
       vim.keymap.set('n', '<space>rf', '<cmd>IronFocus<cr>')
       vim.keymap.set('n', '<space>rh', '<cmd>IronHide<cr>')
