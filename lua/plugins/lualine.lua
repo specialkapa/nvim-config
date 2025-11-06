@@ -46,7 +46,7 @@ return {
 
     local git_blame_component = {
       function()
-        local icon = '%#' .. git_blame_icon_hl .. '#%*'
+        local icon = '%#' .. git_blame_icon_hl .. '#󰊢%*'
         return icon .. git_blame.get_current_blame_text()
       end,
       cond = git_blame.is_blame_text_available,
