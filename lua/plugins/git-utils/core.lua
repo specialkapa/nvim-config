@@ -1,7 +1,8 @@
 return {
   {
-    -- Powerful Git integration for Vim
+    -- powerful git integration for vim
     'tpope/vim-fugitive',
+    vim.keymap.set('n', '<leader>gu', '<cmd>gbrowse<cr>', { desc = '[g]it open file [u]rl' }),
   },
   {
     -- GitHub integration for vim-fugitive
@@ -16,9 +17,9 @@ return {
       date_format = '%Y-%m-%d %H:%M:%S',
       display_virtual_text = 0,
       use_blame_commit_file_urls = true,
-      message_when_not_committed = 'still cooking!',
+      message_when_not_committed = ' still cooking!',
     },
-    vim.keymap.set('n', '<leader>gu', '<cmd>GitBlameOpenCommitURL<cr>', { desc = '[G]it Blame Open File [U]RL' }),
+    vim.keymap.set('n', '<leader>gcu', '<cmd>GitBlameOpenCommitURL<cr>', { desc = '[G]it Blame Open File [U]RL' }),
   },
   {
     'lewis6991/gitsigns.nvim',
@@ -39,6 +40,13 @@ return {
         changedelete = { text = '~' },
       },
     },
+    config = function(_, opts)
+      require('gitsigns').setup(opts)
+      -- Add keymap for floating git blame window
+      vim.keymap.set('n', '<leader>gb', function()
+        require('plugins.git-utils.blame').show_git_blame_float()
+      end, { desc = '[G]it [B]lame floating window' })
+    end,
   },
   {
     'kdheepak/lazygit.nvim',

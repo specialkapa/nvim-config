@@ -27,7 +27,7 @@ require('lazy').setup {
   require 'plugins.welcome-dashboard',
   require 'plugins.indent-blankline',
   require 'plugins.misc',
-  require 'plugins.git',
+  require 'plugins.git-utils.core',
   require 'plugins.lazydocker',
   require 'plugins.toggleterm',
   require 'plugins.comment',
