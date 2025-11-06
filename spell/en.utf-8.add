@@ -16,3 +16,7 @@ init
 md
 lua
 ECL
+bitwarden
+funcref
+expr
+const
