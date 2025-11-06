@@ -16,7 +16,9 @@ return {
       date_format = '%Y-%m-%d %H:%M:%S',
       display_virtual_text = 0,
       use_blame_commit_file_urls = true,
+      message_when_not_committed = 'still cooking!',
     },
+    vim.keymap.set('n', '<leader>gu', '<cmd>GitBlameOpenCommitURL<cr>', { desc = '[G]it Blame Open File [U]RL' }),
   },
   {
     'lewis6991/gitsigns.nvim',
