@@ -214,6 +214,21 @@ install_if_not_exists eza
 install_if_not_exists lazygit
 install_with_brew lazydocker
 install_if_not_exists neovim nvim
+install_with_brew git-delta
+install_with_brew bat
+
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global delta.dark true
+git config --global delta.side-by-side true
+git config --global delta.line-numbers true
+git config --global delta.hyperlinks true
+git config --global merge.conflictStyle zdiff3
+git config --global autocrlf input
+# TODO:: make sure the $HOME/.config/lazygit/config.yml file is maintained on github (one repo for all dotfiles!)
+# TODO:: do the same with .$HOME/gitconfig
+# TODO:: streamline the installation of the catpuccin theme for bat (https://github.com/catppuccin/bat)
 
 if [ ! -d "$HOME/.config" ]; then
     mkdir "$HOME/.config"
