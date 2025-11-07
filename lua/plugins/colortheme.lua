@@ -61,14 +61,21 @@ return {
         },
       },
       color_overrides = {},
-      custom_highlights = {},
+      custom_highlights = nil,
       default_integrations = true,
       auto_integrations = false,
       integrations = {
         cmp = true,
         gitsigns = true,
         nvimtree = true,
-        notify = false,
+        notify = true,
+        grug_fare = false,
+        noice = false,
+        neotest = true,
+        dap = true,
+        dap_ui = true,
+        trouble = true,
+        which_key = false,
         mini = {
           enabled = true,
           indentscope_color = '',
@@ -79,9 +86,29 @@ return {
 
     local transparency_enabled = base_config.transparent_background or false
 
+    local function git_blame_custom_highlights(colors)
+      local float_bg = base_config.transparency_enabled
+
+      return {
+        GitBlameFloat = { bg = float_bg, fg = colors.text },
+        GitBlameFloatBorder = { bg = float_bg, fg = colors.sky },
+        GitBlameFloatAuthor = { bg = float_bg, fg = colors.lavender, bold = true },
+        GitBlameFloatMessage = { bg = float_bg, fg = colors.text },
+        GitBlameFloatHash = { bg = float_bg, fg = colors.mauve },
+        GitBlameFloatStatsFilesChanged = { bg = float_bg, fg = colors.text },
+        GitBlameFloatStatsInsertions = { bg = float_bg, fg = colors.green },
+        GitBlameFloatStatsDeletions = { bg = float_bg, fg = colors.red },
+        GitBlameFloatHelp = { bg = float_bg, fg = colors.overlay1, italic = true },
+        GitBlameURL = { fg = colors.blue, underline = true },
+      }
+    end
+
+    base_config.custom_highlights = git_blame_custom_highlights
+
     local function apply_theme()
       local config = vim.deepcopy(base_config)
       config.transparent_background = transparency_enabled
+      config.custom_highlights = base_config.custom_highlights
 
       catppuccin.setup(config)
       vim.cmd.colorscheme 'catppuccin'
