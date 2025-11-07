@@ -40,6 +40,88 @@ end
 local url_highlight_ns = vim.api.nvim_create_namespace 'GitBlameFloatURL'
 local float_highlight_ns = vim.api.nvim_create_namespace 'GitBlameFloatLineHL'
 
+local function normalize_path(path)
+  if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
+    return path:gsub('\\', '/')
+  end
+  return path
+end
+
+local function get_git_root_for_path(file_path)
+  local dir = vim.fn.fnamemodify(file_path, ':h')
+  local output = vim.fn.systemlist { 'git', '-C', dir, 'rev-parse', '--show-toplevel' }
+  if vim.v.shell_error ~= 0 or not output[1] or output[1] == '' then
+    return nil
+  end
+  return trim(output[1])
+end
+
+local function relative_to_root(file_path, git_root)
+  local normalized_file = normalize_path(file_path)
+  local normalized_root = normalize_path(git_root)
+  if normalized_file:sub(1, #normalized_root) == normalized_root then
+    local offset = #normalized_root + 1
+    if normalized_file:sub(offset, offset) == '/' then
+      offset = offset + 1
+    end
+    return normalized_file:sub(offset)
+  end
+  return normalized_file
+end
+
+local function open_lazygit_for_commit(opts)
+  opts = opts or {}
+  local commit_hash = opts.commit_hash
+  local file_path = opts.file_path
+
+  if not commit_hash or commit_hash == '' or not file_path or file_path == '' then
+    return
+  end
+
+  local ok, lazygit = pcall(require, 'lazygit')
+  if not ok or not lazygit or not lazygit.lazygitfilter then
+    vim.notify('LazyGit plugin is not available', vim.log.levels.WARN)
+    return
+  end
+
+  local git_root = get_git_root_for_path(file_path)
+  if not git_root then
+    vim.notify('Failed to determine git root for LazyGit', vim.log.levels.ERROR)
+    return
+  end
+
+  local relative_path = relative_to_root(file_path, git_root)
+
+  lazygit.lazygitfilter(relative_path, git_root)
+
+  local search_hash = commit_hash:sub(1, math.min(#commit_hash, 8))
+  local attempts = 0
+  local max_attempts = 25
+
+  local function focus_commit()
+    attempts = attempts + 1
+    local buf = rawget(_G, 'LAZYGIT_BUFFER')
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+      if attempts < max_attempts then
+        vim.defer_fn(focus_commit, 100)
+      end
+      return
+    end
+
+    local ok_job, job_id = pcall(vim.api.nvim_buf_get_var, buf, 'terminal_job_id')
+    if not ok_job or not job_id then
+      if attempts < max_attempts then
+        vim.defer_fn(focus_commit, 100)
+      end
+      return
+    end
+
+    vim.api.nvim_chan_send(job_id, '/' .. search_hash .. '\r')
+  end
+
+  vim.defer_fn(focus_commit, 250)
+end
+
 local function ensure_url_highlight_group()
   if vim.fn.hlexists 'GitBlameURL' == 0 then
     vim.api.nvim_set_hl(0, 'GitBlameURL', { fg = '#61afef', underline = true })
@@ -54,6 +136,9 @@ local function open_float_window(content, opts)
   local close_keys = opts.close_keys or { 'q', '<Esc>', '<CR>' }
   local highlight_regions = opts.highlights or {}
   local line_highlights = opts.line_highlights or {}
+  local extra_keymaps = opts.extra_keymaps or {}
+  local float_title = opts.title or ''
+  local title_pos = opts.title_pos or 'left'
 
   local lines = {}
   for _, line in ipairs(content) do
@@ -89,6 +174,11 @@ local function open_float_window(content, opts)
     border = border_chars,
     focusable = true,
   }
+
+  if float_title ~= '' then
+    base_opts.title = float_title
+    base_opts.title_pos = title_pos
+  end
 
   local win = vim.api.nvim_open_win(buf, true, opts.win_opts and vim.tbl_extend('force', base_opts, opts.win_opts) or base_opts)
 
@@ -129,6 +219,19 @@ local function open_float_window(content, opts)
     })
   end
 
+  for _, mapping in ipairs(extra_keymaps) do
+    if mapping.key and mapping.callback then
+      vim.keymap.set('n', mapping.key, function()
+        mapping.callback(buf, win)
+      end, {
+        buffer = buf,
+        noremap = true,
+        silent = true,
+        nowait = mapping.nowait ~= false,
+      })
+    end
+  end
+
   local hl_exists = vim.fn.hlexists 'GitBlameFloat' == 1
   if hl_exists then
     vim.api.nvim_win_set_option(win, 'winhl', 'Normal:GitBlameFloat,FloatBorder:GitBlameFloatBorder')
@@ -156,7 +259,6 @@ local function open_float_window(content, opts)
           end_col = #line_text
         end
 
-        -- vim.hl.range expects end_col to be exclusive, so use the raw length.
         vim.hl.range(buf, float_highlight_ns, hl.group, { hl.line, start_col }, { hl.line, end_col }, {})
       end
     end
@@ -336,10 +438,18 @@ function M.show_git_blame_float()
 
   local help_text
   if web_url ~= '' then
-    help_text = " Press 'o' to open URL, 'c' to copy hash, 'q' or <Esc> to close"
+    help_text = " Press 'o' to open URL, 'd' to view diff on lazygit, 'c' to copy hash and q' or <Esc> to quit"
   else
-    help_text = " Press 'c' to copy hash, 'q' or <Esc> to close"
+    help_text = " Press 'd' to view diff on lazygit, 'c' to copy hash and q' or <Esc> to quit"
   end
+
+  local git_blame_icon_hl = 'GitBlameFloatTitleIcon'
+  vim.api.nvim_set_hl(0, git_blame_icon_hl, { fg = '#f38ba8' })
+  local icon = '󰊢'
+  local title = {
+    { ' ' .. icon .. ' ', git_blame_icon_hl },
+    { 'git blame ', 'FloatTitle' },
+  }
 
   open_float_window(content, {
     web_url = web_url,
@@ -348,6 +458,23 @@ function M.show_git_blame_float()
     highlights = highlights,
     line_highlights = line_highlights,
     help_highlight = 'GitBlameFloatHelp',
+    title = title,
+    title_pos = 'center',
+    extra_keymaps = {
+      {
+        key = 'd',
+        callback = function(_, win)
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, true)
+          end
+          open_lazygit_for_commit {
+            commit_hash = commit_hash,
+            file_path = file_path,
+            line = current_line,
+          }
+        end,
+      },
+    },
   })
 end
 

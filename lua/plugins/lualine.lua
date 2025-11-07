@@ -39,19 +39,6 @@ return {
       cond = hide_in_width,
     }
 
-    local git_blame = require 'gitblame'
-
-    local git_blame_icon_hl = 'LualineGitBlameIcon'
-    vim.api.nvim_set_hl(0, git_blame_icon_hl, { fg = '#f38ba8' })
-
-    local git_blame_component = {
-      function()
-        local icon = '%#' .. git_blame_icon_hl .. '#󰊢%*'
-        return icon .. git_blame.get_current_blame_text()
-      end,
-      cond = git_blame.is_blame_text_available,
-    }
-
     require('lualine').setup {
       options = {
         icons_enabled = true,
@@ -69,7 +56,6 @@ return {
         lualine_b = { 'branch' },
         lualine_c = { filename },
         lualine_x = {
-          git_blame_component,
           diff,
           diagnostics,
           { 'encoding', cond = hide_in_width },
