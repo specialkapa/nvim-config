@@ -261,8 +261,8 @@ function M.show_git_blame_float()
   append_line('', nil)
   append_line('   ' .. message:gsub('\n', ''), 'GitBlameFloatMessage')
   append_line('', nil)
-  local commit_hash_display = commit_hash:sub(1, 8)
-  local hash_url_line = string.format('  %s', commit_hash_display)
+  local commit_hash_display = string.format('  %s', commit_hash:sub(1, 8))
+  local hash_url_line = commit_hash_display
   if web_url ~= '' then
     hash_url_line = hash_url_line .. string.format(' |   %s', web_url)
   end
