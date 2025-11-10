@@ -207,6 +207,7 @@ if ! command_exists brew; then
 fi
 
 install_cargo_package grip-grab
+install_cargo_package git-graph
 install_if_not_exists ripgrep rg
 install_if_not_exists fzf
 install_if_not_exists fd-find fd
