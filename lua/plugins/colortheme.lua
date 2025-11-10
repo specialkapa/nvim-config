@@ -91,7 +91,9 @@ return {
 
       return {
         GitBlameFloat = { bg = float_bg, fg = colors.text },
+        GitBlameFloatTitle = { bg = float_bg, fg = colors.sky, bold = true },
         GitBlameFloatBorder = { bg = float_bg, fg = colors.sky },
+        GitBlameFloatTitleIcon = { bg = float_bg, fg = colors.red, bold = true },
         GitBlameFloatAuthor = { bg = float_bg, fg = colors.lavender, bold = true },
         GitBlameFloatMessage = { bg = float_bg, fg = colors.text },
         GitBlameFloatHash = { bg = float_bg, fg = colors.mauve },

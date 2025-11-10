@@ -1,5 +1,47 @@
 local M = {}
 
+local function wrap_text(text, max_width)
+  if not text or text == '' then
+    return { '' }
+  end
+
+  max_width = math.max(max_width or 1, 1)
+
+  local lines = {}
+  local current = ''
+
+  for word in text:gmatch '%S+' do
+    if current == '' then
+      current = word
+    elseif #current + 1 + #word <= max_width then
+      current = current .. ' ' .. word
+    else
+      table.insert(lines, current)
+      if #word > max_width then
+        local start_idx = 1
+        while start_idx <= #word do
+          local chunk = word:sub(start_idx, start_idx + max_width - 1)
+          if #chunk == max_width then
+            table.insert(lines, chunk)
+            start_idx = start_idx + max_width
+          else
+            current = chunk
+            start_idx = #word + 1
+          end
+        end
+      else
+        current = word
+      end
+    end
+  end
+
+  if current ~= '' then
+    table.insert(lines, current)
+  end
+
+  return lines
+end
+
 local function trim(value)
   if not value then
     return ''
@@ -359,9 +401,17 @@ function M.show_git_blame_float()
     return line_index
   end
 
+  append_line('', nil)
   append_line(string.format('  %s <%s> on %s', author, email, date), 'GitBlameFloatAuthor')
   append_line('', nil)
-  append_line('   ' .. message:gsub('\n', ''), 'GitBlameFloatMessage')
+
+  local sanitized_message = message:gsub('\r', ' '):gsub('\n', ' '):gsub('%s+', ' ')
+  local max_message_width = math.max(40, math.min(100, math.floor(200 * 0.5)))
+  local message_indent = '   '
+  local wrapped_message = wrap_text(sanitized_message, math.max(max_message_width - #message_indent, 10))
+  for _, line in ipairs(wrapped_message) do
+    append_line(message_indent .. line, 'GitBlameFloatMessage')
+  end
   append_line('', nil)
   local commit_hash_display = string.format('  %s', commit_hash:sub(1, 8))
   local hash_url_line = commit_hash_display
@@ -392,14 +442,22 @@ function M.show_git_blame_float()
 
     if insertions then
       table.insert(stats_segments, {
-        text = string.format(', +%s insertions', insertions),
+        text = ', ',
+        group = nil,
+      })
+      table.insert(stats_segments, {
+        text = string.format('+%s insertions', insertions),
         group = 'GitBlameFloatStatsInsertions',
       })
     end
 
     if deletions then
       table.insert(stats_segments, {
-        text = string.format(', -%s deletions', deletions),
+        text = ', ',
+        group = nil,
+      })
+      table.insert(stats_segments, {
+        text = string.format('-%s deletions', deletions),
         group = 'GitBlameFloatStatsDeletions',
       })
     end
@@ -414,12 +472,14 @@ function M.show_git_blame_float()
     local col = 0
     for _, segment in ipairs(stats_segments) do
       local segment_length = #segment.text
-      table.insert(line_highlights, {
-        line = stats_line_index,
-        group = segment.group,
-        col_start = col,
-        col_end = col + segment_length,
-      })
+      if segment.group then
+        table.insert(line_highlights, {
+          line = stats_line_index,
+          group = segment.group,
+          col_start = col,
+          col_end = col + segment_length,
+        })
+      end
       col = col + segment_length
     end
   end
@@ -444,11 +504,10 @@ function M.show_git_blame_float()
   end
 
   local git_blame_icon_hl = 'GitBlameFloatTitleIcon'
-  vim.api.nvim_set_hl(0, git_blame_icon_hl, { fg = '#f38ba8' })
   local icon = '󰊢'
   local title = {
     { ' ' .. icon .. ' ', git_blame_icon_hl },
-    { 'git blame ', 'FloatTitle' },
+    { 'git blame ', 'GitBlameFloatTitle' },
   }
 
   open_float_window(content, {
@@ -459,7 +518,7 @@ function M.show_git_blame_float()
     line_highlights = line_highlights,
     help_highlight = 'GitBlameFloatHelp',
     title = title,
-    title_pos = 'center',
+    title_pos = 'left',
     extra_keymaps = {
       {
         key = 'd',
