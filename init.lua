@@ -39,4 +39,5 @@ require('lazy').setup {
   require 'plugins.python-utils',
   require 'plugins.noice',
   require 'plugins.db-utils',
+  require 'plugins.navigation',
 }
