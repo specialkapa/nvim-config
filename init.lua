@@ -38,6 +38,5 @@ require('lazy').setup {
   require 'plugins.search-n-replace',
   require 'plugins.python-utils',
   require 'plugins.noice',
-  require 'plugins.flash-nvim',
   require 'plugins.db-utils',
 }
