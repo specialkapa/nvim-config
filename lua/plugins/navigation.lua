@@ -23,12 +23,21 @@ return {
       { 'nvim-telescope/telescope.nvim' },
     },
     config = function()
+      local palettes_ok, palettes = pcall(require, 'catppuccin.palettes')
+      local mocha = palettes_ok and palettes.get_palette 'mocha' or nil
+      local bookmark_colors = {
+        icon = mocha and mocha.pink or '#FF69B4',
+        line_bg = '#572626',
+        tree_bg = mocha and mocha.surface0 or '#2C323C',
+        tree_fg = mocha and mocha.yellow or '#ffffff',
+      }
+      local bookmarks = require 'bookmarks'
       local opts = {
         signs = {
           mark = {
             icon = ' ',
-            color = '#FF69B4',
-            line_bg = '#572626',
+            color = bookmark_colors.icon,
+            line_bg = bookmark_colors.line_bg,
           },
           desc_format = function(bookmark)
             ---@cast bookmark Bookmarks.Node
@@ -41,8 +50,8 @@ return {
           render_bookmark = nil,
           highlights = {
             active_list = {
-              bg = '#2C323C',
-              fg = '#ffffff',
+              bg = bookmark_colors.tree_bg,
+              fg = bookmark_colors.tree_fg,
               bold = true,
             },
           },
@@ -154,8 +163,19 @@ return {
           window_split_dimension = 30,
         },
       } -- check the "./lua/bookmarks/default-config.lua" file for all the options
-      require('bookmarks').setup(opts) -- you must call setup to init sqlite db
+      bookmarks.setup(opts) -- you must call setup to init sqlite db
       vim.keymap.set('n', '<leader>bm', '<cmd>BookmarksMark<cr>', { desc = 'Place [B]ook [M]ark' })
+
+      -- Always focus the BookmarksTree window after opening it so it is ready for interaction
+      vim.api.nvim_create_user_command('BookmarksTree', function()
+        bookmarks.toggle_treeview()
+        vim.schedule(function()
+          local ctx = vim.g.bookmark_tree_view_ctx
+          if ctx and vim.api.nvim_win_is_valid(ctx.win) then
+            vim.api.nvim_set_current_win(ctx.win)
+          end
+        end)
+      end, { desc = 'browse bookmarks in tree view', force = true })
 
       local group = vim.api.nvim_create_augroup('BookmarksTreeHideStatusColumn', { clear = true })
       vim.api.nvim_create_autocmd('BufWinEnter', {
@@ -173,6 +193,7 @@ return {
           vim.api.nvim_set_option_value('statuscolumn', '', { win = win })
           vim.api.nvim_set_option_value('number', false, { win = win })
           vim.api.nvim_set_option_value('relativenumber', false, { win = win })
+          vim.api.nvim_set_option_value('spell', false, { win = win })
         end,
       })
     end,
