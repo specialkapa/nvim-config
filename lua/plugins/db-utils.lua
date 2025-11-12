@@ -224,7 +224,7 @@ return {
 
       vim.schedule(function()
         vim.ui.input({
-          prompt = 'Save DBUI output as CSV: ',
+          prompt = ' save location ',
           default = suggested,
           completion = 'file',
         }, function(input)
