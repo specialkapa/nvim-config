@@ -43,7 +43,6 @@
   "none-ls-extras.nvim": { "branch": "main", "commit": "402c6b5c29f0ab57fac924b863709f37f55dc298" },
   "none-ls.nvim": { "branch": "main", "commit": "a96172f673f720cd4f3572e1fcd08400ed3eb25d" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
-  "nvim-aider": { "branch": "main", "commit": "c8a4f952937d54f17dc23bd378e9e3b373f502b2" },
   "nvim-autopairs": { "branch": "master", "commit": "7a2c97cccd60abc559344042fefb1d5a85b3e33b" },
   "nvim-cmp": { "branch": "main", "commit": "cf22c9e32512de3be1fd6b65fd25e3aabead4d8b" },
   "nvim-colorizer.lua": { "branch": "master", "commit": "a065833f35a3a7cc3ef137ac88b5381da2ba302e" },
