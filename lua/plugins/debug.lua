@@ -186,10 +186,10 @@ return {
         },
         {
           elements = {
-            { id = 'repl', size = 0.5 },
+            { id = 'repl', size = 1.0 },
           },
-          size = 40,
-          position = 'right',
+          size = 25,
+          position = 'bottom',
         },
       },
     }
