@@ -102,6 +102,7 @@ return {
         GitBlameFloatStatsDeletions = { bg = float_bg, fg = colors.red },
         GitBlameFloatHelp = { bg = float_bg, fg = colors.overlay1, italic = true },
         GitBlameURL = { fg = colors.blue, underline = true },
+        WinSeparator = { fg = colors.blue },
       }
     end
 
