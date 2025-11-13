@@ -116,6 +116,7 @@ local function layout()
   ---@return table
   lazycache.menu = function()
     return {
+      button('󱁐 wd', '  Add vimwiki diary entry'),
       button('󱁐 s.', '  Find recent files'),
       button('󱁐 sf', '  Find file'),
       button('󱁐 sg', '  Find reference'),

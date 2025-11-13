@@ -94,4 +94,7 @@ return {
       },
     },
   },
+  {
+    'vimwiki/vimwiki',
+  },
 }

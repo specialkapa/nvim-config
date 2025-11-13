@@ -132,3 +132,5 @@ end, with_desc 'Select [S]ession')
 vim.keymap.set('n', '[c', function()
   require('treesitter-context').go_to_context(vim.v.count1)
 end, { silent = true })
+
+vim.keymap.set('n', '<leader>wd', ':AppendDiary<CR>', { desc = 'Append daily diary entry' })
