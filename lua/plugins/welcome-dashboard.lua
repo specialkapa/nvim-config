@@ -1,12 +1,14 @@
 ---@return table
 local function layout()
   ---@param sc string
-  ---@param txt string
+  ---@param icon string
+  ---@param desc string
+  ---@param icon_color string?
   ---@param keybind string?
   ---@param keybind_opts table?
   ---@param opts table?
   ---@return table
-  local function button(sc, txt, keybind, keybind_opts, opts)
+  local function button(sc, icon, desc, icon_color, keybind, keybind_opts, opts)
     local def_opts = {
       cursor = 3,
       align_shortcut = 'right',
@@ -17,6 +19,21 @@ local function layout()
     }
     opts = opts and vim.tbl_extend('force', def_opts, opts) or def_opts
     opts.shortcut = sc
+    local val = string.format('%s  %s', icon, desc)
+    if icon_color then
+      local icon_bytes = #icon
+      if type(opts.hl) == 'string' then
+        local button_hl = opts.hl
+        opts.hl = {
+          { icon_color, 0, icon_bytes },
+          { button_hl, icon_bytes, #val },
+        }
+      elseif type(opts.hl) == 'table' then
+        table.insert(opts.hl, 1, { icon_color, 0, icon_bytes })
+      else
+        opts.hl = { { icon_color, 0, icon_bytes } }
+      end
+    end
     local sc_ = sc:gsub('%s', ''):gsub('SPC', '<Leader>')
     local on_press = function()
       local key = vim.api.nvim_replace_termcodes(keybind or sc_ .. '<Ignore>', true, false, true)
@@ -26,40 +43,11 @@ local function layout()
       keybind_opts = vim.F.if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
       opts.keymap = { 'n', sc_, keybind, keybind_opts }
     end
-    return { type = 'button', val = txt, on_press = on_press, opts = opts }
+    return { type = 'button', val = val, on_press = on_press, opts = opts }
   end
 
   local function system_icon()
-    if vim.fn.has 'win32' == 1 then
-      return ''
-    end
-    if vim.fn.has 'macunix' == 1 then
-      return ''
-    end
-
-    local ok, lines = pcall(vim.fn.readfile, '/etc/os-release')
-    if ok then
-      local distro
-      for _, line in ipairs(lines) do
-        local key, value = line:match '^(%w+)=(.+)$'
-        if key == 'ID' then
-          distro = value:gsub('^"(.*)"$', '%1'):lower()
-          break
-        end
-      end
-
-      if distro then
-        local icons = {
-          ubuntu = '',
-          arch = '󰣇',
-          archlinux = '󰣇',
-          omarchy = '󰈸',
-        }
-        return icons[distro] or ''
-      end
-    end
-
-    return ''
+    return ''
   end
 
   math.randomseed(os.time())
@@ -103,7 +91,7 @@ local function layout()
   lazycache.info = function()
     local v = vim.version()
     local datetime = os.date ' %d-%m-%Y   %H:%M:%S'
-    local top_line = string.format('%s Neovim %d.%d.%d  %s', system_icon(), v.major, v.minor, v.patch, datetime)
+    local top_line = string.format('%s nvim v%d.%d.%d  %s', system_icon(), v.major, v.minor, v.patch, datetime)
     return {
       {
         type = 'text',
@@ -116,15 +104,15 @@ local function layout()
   ---@return table
   lazycache.menu = function()
     return {
-      button('󱁐 wd', '  Add vimwiki diary entry'),
-      button('󱁐 s.', '  Find recent files'),
-      button('󱁐 sf', '  Find file'),
-      button('󱁐 sg', '  Find reference'),
-      button('󱁐 ql', '  Load last session'),
-      button('󱁐 e ', '  Toggle file tree'),
-      button('n ', '  New file', '<Cmd>ene<CR>'),
-      button('p ', '  Plugins', '<Cmd>Lazy<CR>'),
-      button('q ', '  Quit', '<Cmd>qa<CR>'),
+      button('󱁐 wd', '', 'add vimwiki diary entry', 'AlphaIconGreen'),
+      button('󱁐 s.', '', 'find recent files', 'AlphaIconSky'),
+      button('󱁐 sf', '', 'find file', 'AlphaIconSky'),
+      button('󱁐 sg', '', 'find reference', 'AlphaIconMauve'),
+      button('󱁐 ql', '', 'load last session', 'AlphaIconLavender'),
+      button('󱁐 e ', '', 'toggle file tree', 'AlphaIconYellow'),
+      button('n ', '', 'new file', 'AlphaIconPeach', '<Cmd>ene<CR>'),
+      button('p ', '', 'plugins', 'AlphaIconPink', '<Cmd>Lazy<CR>'),
+      button('q ', '', 'quit', 'AlphaIconRed', '<Cmd>qa<CR>'),
     }
   end
 
@@ -137,16 +125,7 @@ local function layout()
         icon = icon or ''
         hl = hl or 'Normal'
         local filename_short = string.sub(vim.fn.fnamemodify(filename, ':t'), 1, 30)
-        table.insert(
-          result,
-          button(
-            tostring(#result + 1),
-            string.format('%s  %s', icon, filename_short),
-            string.format('<Cmd>e %s<CR>', filename),
-            nil,
-            { hl = { { hl, 0, 3 }, { 'Normal', 5, #filename_short + 5 } } }
-          )
-        )
+        table.insert(result, button(tostring(#result + 1), icon, filename_short, hl, string.format('<Cmd>e %s<CR>', filename), nil, { hl = 'Normal' }))
         if #result == 9 then
           break
         end
@@ -201,8 +180,32 @@ return {
   'goolord/alpha-nvim',
   event = 'VimEnter',
   config = function()
-    vim.api.nvim_set_hl(0, 'AlphaProgressLoaded', { fg = '#B4C424' })
-    vim.api.nvim_set_hl(0, 'AlphaProgressPending', { fg = '#F88379' })
+    local function setup_icon_highlights()
+      local ok, palettes = pcall(require, 'catppuccin.palettes')
+      if not ok then
+        return
+      end
+      local palette = palettes.get_palette 'mocha'
+      local icon_colors = {
+        AlphaIconBlue = palette.blue,
+        AlphaIconGreen = palette.green,
+        AlphaIconLavender = palette.lavender,
+        AlphaIconMauve = palette.mauve,
+        AlphaIconPink = palette.pink,
+        AlphaIconPeach = palette.peach,
+        AlphaIconRed = palette.red,
+        AlphaIconSky = palette.sky,
+        AlphaIconTeal = palette.teal,
+        AlphaIconYellow = palette.yellow,
+      }
+      for group, color in pairs(icon_colors) do
+        if color then
+          vim.api.nvim_set_hl(0, group, { fg = color, bold = true })
+        end
+      end
+    end
+
+    setup_icon_highlights()
     require('alpha').setup {
       layout = layout(),
       opts = {
