@@ -71,27 +71,30 @@ return { -- Autocompletion
       Operator = '󰆕',
       TypeParameter = '󰊄',
     }
-    local border = {
-      { '╭', 'CmpBorder' },
-      { '─', 'CmpBorder' },
-      { '╮', 'CmpBorder' },
-      { '│', 'CmpBorder' },
-      { '╯', 'CmpBorder' },
-      { '─', 'CmpBorder' },
-      { '╰', 'CmpBorder' },
-      { '│', 'CmpBorder' },
-    }
+
+    local palettes_ok, palettes = pcall(require, 'catppuccin.palettes')
+    local mocha = palettes_ok and palettes.get_palette 'mocha' or nil
+    local border_highlight = 'CmpBorder'
+
+    if mocha then
+      border_highlight = 'CmpBorderMocha'
+      vim.api.nvim_set_hl(0, border_highlight, {
+        fg = mocha.blue,
+        bg = mocha.base,
+      })
+    end
 
     local border = {
-      { '╭', 'CmpBorder' },
-      { '─', 'CmpBorder' },
-      { '╮', 'CmpBorder' },
-      { '│', 'CmpBorder' },
-      { '╯', 'CmpBorder' },
-      { '─', 'CmpBorder' },
-      { '╰', 'CmpBorder' },
-      { '│', 'CmpBorder' },
+      { '╭', border_highlight },
+      { '─', border_highlight },
+      { '╮', border_highlight },
+      { '│', border_highlight },
+      { '╯', border_highlight },
+      { '─', border_highlight },
+      { '╰', border_highlight },
+      { '│', border_highlight },
     }
+
     cmp.setup {
       window = {
         documentation = {
