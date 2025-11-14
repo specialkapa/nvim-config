@@ -166,10 +166,18 @@ return {
     vim.keymap.set('n', '<leader>fb', ' :Telescope file_browser<CR>', { desc = '[F]ile [B]rowser' })
 
     vim.keymap.set('n', '<leader>/', function()
-      builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-        winblend = 10,
-        previewer = false,
-      })
+      builtin.current_buffer_fuzzy_find {
+        prompt_title = 'Current Buffer Fuzzy Find',
+        sorting_strategy = 'ascending',
+        layout_strategy = 'horizontal',
+        previewer = true,
+        layout_config = {
+          prompt_position = 'top',
+          width = 0.5,
+          height = 0.4,
+          preview_width = 0.6,
+        },
+      }
     end, { desc = '[/] Fuzzily search in current buffer' })
 
     map_pretty_grep('<leader>s/', 'live_grep', '[S]earch [/] in Open Files', {
