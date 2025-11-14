@@ -137,7 +137,7 @@ return {
 
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = 'Debug: Set [B]reakpoint' })
+    end, { desc = 'Debug: Set Conditional [B]reakpoint' })
 
     vim.keymap.set('n', '<space>?', function()
       require('dapui').eval(nil, { enter = true })
