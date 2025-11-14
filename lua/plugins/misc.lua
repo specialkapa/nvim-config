@@ -11,7 +11,7 @@ return {
     opts = {
       preset = 'helix',
       win = {
-        title = '   keybinds ',
+        title = '  keybinds ',
         title_pos = 'center',
       },
     },
