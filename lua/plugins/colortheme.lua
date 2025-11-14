@@ -6,7 +6,7 @@ return {
     local catppuccin = require 'catppuccin'
 
     local base_config = {
-      flavour = 'mocha',
+      flavour = 'auto',
       background = {
         light = 'latte',
         dark = 'mocha',
@@ -65,6 +65,7 @@ return {
       default_integrations = true,
       auto_integrations = false,
       integrations = {
+        barbar = true,
         cmp = true,
         gitsigns = true,
         nvimtree = true,
@@ -114,7 +115,7 @@ return {
       config.custom_highlights = base_config.custom_highlights
 
       catppuccin.setup(config)
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      vim.cmd.colorscheme 'catppuccin'
     end
 
     apply_theme()
