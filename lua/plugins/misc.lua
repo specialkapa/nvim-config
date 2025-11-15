@@ -96,5 +96,64 @@ return {
   },
   {
     'vimwiki/vimwiki',
+    init = function()
+      vim.g.vimwiki_list = {
+        {
+          path = '~/.vimwiki/',
+          syntax = 'markdown',
+          ext = 'md',
+          diary_rel_path = 'journal/',
+          diary_index = 'journal',
+          diary_header = 'Journal',
+          diary_frequency = 'yearly',
+          vimwiki_toc_link_format = 0,
+          diary_mode = 'append',
+          diary_sort = 'desc',
+        },
+      }
+
+      vim.api.nvim_create_user_command('AppendDiary', function()
+        local cfg = vim.g.vimwiki_list[1]
+        local diary_path = vim.fn.expand(cfg.path .. cfg.diary_rel_path .. cfg.diary_index .. '.' .. cfg.ext)
+        local date_header = '# ' .. os.date '%Y-%m-%d'
+        local content = { '', date_header, '', '- [ ] Todo item', '' }
+
+        local file = io.open(diary_path, 'r')
+        local lines = {}
+        local header_exists = false
+        if file then
+          for line in file:lines() do
+            if line == date_header then
+              header_exists = true
+            end
+            table.insert(lines, line)
+          end
+          file:close()
+        end
+
+        if header_exists then
+          vim.cmd('edit ' .. diary_path)
+          return
+        end
+
+        if #lines > 0 and lines[#lines] ~= '' then
+          table.insert(lines, '')
+        end
+        for _, line in ipairs(content) do
+          table.insert(lines, line)
+        end
+
+        file = io.open(diary_path, 'w')
+        if file then
+          local body = table.concat(lines, '\n')
+          if #body > 0 then
+            body = body .. '\n'
+          end
+          file:write(body)
+          file:close()
+          vim.cmd('edit ' .. diary_path)
+        end
+      end, {})
+    end,
   },
 }
