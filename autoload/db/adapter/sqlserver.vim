@@ -25,40 +25,36 @@ function! s:database_from_path(url) abort
   if empty(path)
     return ''
   endif
-  " strip leading '/'
   if path[0] ==# '/'
     let path = path[1:]
   endif
   return path
 endfunction
 
+" --- REPL / :DB with no range ----------------------------------------
 function! db#adapter#sqlserver#interactive(url) abort
   let l:url = db#url#parse(a:url)
   let l:params = get(l:url, 'params', {})
   let l:db = s:database_from_path(l:url)
 
-  " ---------- Azure AD / -G mode ----------
+  " Azure AD mode (sqlcmd -G)
   if has_key(l:params, 'azure_ad_auth')
     let l:cmd = ['sqlcmd', '-S', s:server(l:url)]
 
-    " TLS (-N) if encrypt=true/yes/1/on
     if s:param_bool(l:params, 'encrypt')
       call add(l:cmd, '-N')
     endif
-
     if !empty(l:db)
       call extend(l:cmd, ['-d', l:db])
     endif
 
-    " Azure AD integrated login
     call add(l:cmd, '-G')
     return l:cmd
   endif
 
-  " ---------- Default behaviour ----------
+  " Default behaviour
   let l:cmd = ['sqlcmd', '-S', s:server(l:url)]
 
-  " TLS / trustServerCertificate, using params
   if s:param_bool(l:params, 'encrypt')
     call add(l:cmd, '-N')
   endif
@@ -66,18 +62,69 @@ function! db#adapter#sqlserver#interactive(url) abort
     call add(l:cmd, '-C')
   endif
 
-  " SQL auth if user present, otherwise integrated (-E)
   if has_key(l:url, 'user')
     call extend(l:cmd, ['-U', l:url.user])
     if has_key(l:url, 'password') && !empty(l:url.password)
       call extend(l:cmd, ['-P', l:url.password])
     endif
+  else
+    call add(l:cmd, '-E')
   endif
 
   if !empty(l:db)
     call extend(l:cmd, ['-d', l:db])
   endif
 
+  return l:cmd
+endfunction
+
+" --- Non-interactive / file or range mode ----------------------------
+" Used by :%DB, '<,'>DB, and DBUI when it detects an adapter #input().
+function! db#adapter#sqlserver#input(url, input) abort
+  let l:url = db#url#parse(a:url)
+  let l:params = get(l:url, 'params', {})
+  let l:db = s:database_from_path(l:url)
+
+  " Azure AD mode (sqlcmd -G -i <file>)
+  if has_key(l:params, 'azure_ad_auth')
+    let l:cmd = ['sqlcmd', '-S', s:server(l:url)]
+
+    if s:param_bool(l:params, 'encrypt')
+      call add(l:cmd, '-N')
+    endif
+    if !empty(l:db)
+      call extend(l:cmd, ['-d', l:db])
+    endif
+
+    call add(l:cmd, '-G')
+    call extend(l:cmd, ['-i', a:input])
+    return l:cmd
+  endif
+
+  " Default behaviour for non-Azure connections
+  let l:cmd = ['sqlcmd', '-S', s:server(l:url)]
+
+  if s:param_bool(l:params, 'encrypt')
+    call add(l:cmd, '-N')
+  endif
+  if s:param_bool(l:params, 'trustServerCertificate')
+    call add(l:cmd, '-C')
+  endif
+
+  if has_key(l:url, 'user')
+    call extend(l:cmd, ['-U', l:url.user])
+    if has_key(l:url, 'password') && !empty(l:url.password)
+      call extend(l:cmd, ['-P', l:url.password])
+    endif
+  else
+    call add(l:cmd, '-E')
+  endif
+
+  if !empty(l:db)
+    call extend(l:cmd, ['-d', l:db])
+  endif
+
+  call extend(l:cmd, ['-i', a:input])
   return l:cmd
 endfunction
 
