@@ -104,6 +104,8 @@ return {
         GitBlameFloatHelp = { bg = float_bg, fg = colors.overlay1, italic = true },
         GitBlameURL = { fg = colors.blue, underline = true },
         WinSeparator = { fg = colors.blue },
+        -- Ensure neominimap honors Catppuccin's dimming for inactive windows
+        NeominimapBackground = { link = 'NormalNC' },
       }
     end
 
