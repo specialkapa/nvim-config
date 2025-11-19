@@ -13,6 +13,9 @@ return {
   },
   config = function()
     require('neotest').setup {
+      floating = {
+        border = 'rounded',
+      },
       adapters = {
         require 'neotest-python' {
           dap = { justMyCode = false },
