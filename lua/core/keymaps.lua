@@ -134,3 +134,44 @@ vim.keymap.set('n', '[c', function()
 end, { silent = true })
 
 vim.keymap.set('n', '<leader>wd', ':AppendDiary<CR>', { desc = 'Append daily diary entry' })
+
+-- neotest keymaps
+vim.keymap.set('n', '<leader>nr', function()
+  require('neotest').run.run()
+end, with_desc '[R]un nearest test')
+
+vim.keymap.set('n', '<leader>nf', function()
+  require('neotest').run.run(vim.fn.expand '%')
+end, with_desc 'Run current [f]ile')
+
+vim.keymap.set('n', '<leader>na', function()
+  require('neotest').run.run { suite = true }
+end, with_desc 'Run [a]ll tests')
+
+vim.keymap.set('n', '<leader>nd', function()
+  require('neotest').run.run { strategy = 'dap' }
+end, with_desc '[D]ebug nearest test')
+
+vim.keymap.set('n', '<leader>ns', function()
+  require('neotest').run.stop()
+end, with_desc '[S]top test')
+
+vim.keymap.set('n', '<leader>nn', function()
+  require('neotest').run.attach()
+end, with_desc 'Attach to [n]earest test')
+
+vim.keymap.set('n', '<leader>no', function()
+  require('neotest').output.open()
+end, with_desc 'Show test [o]utput')
+
+vim.keymap.set('n', '<leader>np', function()
+  require('neotest').output_panel.toggle()
+end, with_desc 'Toggle output [p]anel')
+
+vim.keymap.set('n', '<leader>nv', function()
+  require('neotest').summary.toggle()
+end, with_desc 'Toggle test summary')
+
+vim.keymap.set('n', '<leader>nc', function()
+  require('neotest').run.run { suite = true, env = { CI = true } }
+end, with_desc 'Run all tests with CI')
