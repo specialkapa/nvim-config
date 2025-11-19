@@ -16,11 +16,30 @@ return {
       floating = {
         border = 'rounded',
       },
+      icons = {
+        child_indent = '│',
+        child_prefix = '├',
+        collapsed = '─',
+        expanded = '╮',
+        failed = '',
+        final_child_indent = ' ',
+        final_child_prefix = '╰',
+        non_collapsible = '─',
+        notify = '',
+        passed = '󰄴',
+        running = '',
+        running_animated = { '/', '|', '\\', '-', '/', '|', '\\', '-' },
+        skipped = '',
+        test = '',
+        unknown = '󰄰',
+        watching = '',
+      },
+
       adapters = {
         require 'neotest-python' {
           dap = { justMyCode = false },
         },
-        args = { '--log-level', 'DEBUG' },
+        args = { '--log-level', 'DEBUG', '-vvv' },
         runner = 'pytest',
         python = '.venv/bin/python',
 
