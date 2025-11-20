@@ -28,7 +28,7 @@ return {
         notify = '',
         passed = '󰄴',
         running = '',
-        running_animated = { '/', '|', '\\', '-', '/', '|', '\\', '-' },
+        running_animated = { '', '', '', '', '', '' },
         skipped = '',
         test = '',
         unknown = '󰄰',
