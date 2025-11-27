@@ -19,7 +19,7 @@ return {
       show_end_of_buffer = false,
       term_colors = false,
       dim_inactive = {
-        enabled = true,
+        enabled = false,
         shade = 'dark',
         percentage = 0.15,
       },
