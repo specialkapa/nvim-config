@@ -35,9 +35,17 @@ return {
     local diff = {
       'diff',
       colored = true,
-      symbols = { added = ' ', modified = ' ', removed = ' ' }, -- changes diff symbols
+      symbols = { added = ' ', modified = ' ', removed = ' ' },
       cond = hide_in_width,
     }
+
+    local function is_recording()
+      local reg = vim.fn.reg_recording()
+      if reg == '' then
+        return ''
+      end
+      return 'recording to ' .. reg
+    end
 
     require('lualine').setup {
       options = {
@@ -56,6 +64,7 @@ return {
         lualine_b = { 'branch' },
         lualine_c = { filename },
         lualine_x = {
+          is_recording,
           diff,
           diagnostics,
           { 'encoding', cond = hide_in_width },
