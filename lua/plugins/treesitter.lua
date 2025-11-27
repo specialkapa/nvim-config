@@ -3,7 +3,24 @@ return { -- Highlight, edit, and navigate code
   event = { 'BufReadPost', 'BufNewFile' },
   build = ':TSUpdate',
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-context',
+    {
+      'nvim-treesitter/nvim-treesitter-context',
+      config = function()
+        require('treesitter-context').setup {
+          enable = true,
+          multiwindow = false,
+          max_lines = 0,
+          min_window_height = 0,
+          line_numbers = true,
+          multiline_threshold = 1,
+          trim_scope = 'outer',
+          mode = 'cursor',
+          separator = nil,
+          zindex = 20,
+          on_attach = nil,
+        }
+      end,
+    },
   },
   main = 'nvim-treesitter.configs', -- Sets main module to use for opts
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
