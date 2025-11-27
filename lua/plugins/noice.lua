@@ -8,6 +8,7 @@ return {
         ['vim.lsp.util.stylize_markdown'] = true,
         ['cmp.entry.get_documentation'] = true,
       },
+      views = { split = { enter = true } },
       progress = {
         enabled = true,
         format = {
@@ -44,7 +45,7 @@ return {
       },
     },
     presets = {
-      bottom_search = true,
+      bottom_search = false,
       command_palette = true,
       long_message_to_split = true,
       lsp_doc_border = true, -- add a border to hover docs and signature help
@@ -65,7 +66,7 @@ return {
         search_up = { kind = 'search', pattern = '^%?', icon = ' ', lang = 'regex' },
         filter = { pattern = '^:%s*!', icon = '$', lang = 'bash' },
         lua = { pattern = { '^:%s*lua%s+', '^:%s*lua%s*=%s*', '^:%s*=%s*' }, icon = '', lang = 'lua' },
-        help = { pattern = '^:%s*he?l?p?%s+', icon = '' },
+        help = { pattern = '^:%s*he?l?p?%s+', icon = '' },
         input = { view = 'cmdline_input', icon = '󰥻 ' }, -- Used by input()
         -- lua = false, -- to disable a format, set to `false`
       },
