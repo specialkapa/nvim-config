@@ -12,8 +12,45 @@ local function with_desc(desc)
   return vim.tbl_extend('keep', opts, { desc = desc })
 end
 
+-- Treat the largest window as the "main" editing target.
+local function get_main_window()
+  local main_win
+  local main_area = 0
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative == '' then
+      local area = vim.api.nvim_win_get_width(win) * vim.api.nvim_win_get_height(win)
+      if area > main_area then
+        main_area = area
+        main_win = win
+      end
+    end
+  end
+  return main_win
+end
+
+local function open_file_in_main_window()
+  local file = vim.fn.expand '<cfile>'
+  if file == '' then
+    vim.cmd 'normal! gf'
+    return
+  end
+
+  local main_win = get_main_window()
+  local current_win = vim.api.nvim_get_current_win()
+  if not main_win or not vim.api.nvim_win_is_valid(main_win) or main_win == current_win then
+    vim.cmd 'normal! gf'
+    return
+  end
+
+  vim.api.nvim_set_current_win(main_win)
+  vim.cmd('edit ' .. vim.fn.fnameescape(file))
+end
+
 -- save file
 vim.keymap.set('n', '<C-s>', '<cmd> w <CR>', opts)
+
+vim.keymap.set('n', 'gf', open_file_in_main_window, with_desc 'Follow file link in main window')
 
 -- save file without auto-formatting
 vim.keymap.set('n', '<leader>sn', '<cmd>noautocmd w <CR>', with_desc 'Save without formatting')
