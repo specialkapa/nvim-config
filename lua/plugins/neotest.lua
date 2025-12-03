@@ -12,7 +12,9 @@ return {
     'nvim-neotest/neotest-vim-test',
   },
   config = function()
-    require('neotest').setup {
+    local neotest = require 'neotest'
+
+    neotest.setup {
       floating = {
         border = 'rounded',
       },
@@ -50,5 +52,34 @@ return {
         },
       },
     }
+
+    -- Hide the global statuscolumn/line numbers inside the summary sidebar
+    local summary_group = vim.api.nvim_create_augroup('UserNeotestSummary', { clear = true })
+    local function disable_summary_numbers(bufnr)
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == bufnr then
+          vim.api.nvim_set_option_value('number', false, { win = win })
+          vim.api.nvim_set_option_value('relativenumber', false, { win = win })
+          vim.api.nvim_set_option_value('statuscolumn', ' ', { win = win })
+        end
+      end
+    end
+
+    vim.api.nvim_create_autocmd('FileType', {
+      group = summary_group,
+      pattern = 'neotest-summary',
+      callback = function(args)
+        disable_summary_numbers(args.buf)
+      end,
+    })
+
+    vim.api.nvim_create_autocmd('BufWinEnter', {
+      group = summary_group,
+      callback = function(args)
+        if vim.bo[args.buf].filetype == 'neotest-summary' then
+          disable_summary_numbers(args.buf)
+        end
+      end,
+    })
   end,
 }
