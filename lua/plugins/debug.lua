@@ -126,6 +126,26 @@ return {
       end
     end
 
+    local function open_breakpoint_picker()
+      local ok, telescope = pcall(require, 'telescope')
+      if not ok then
+        vim.notify('Telescope is not available', vim.log.levels.ERROR)
+        return
+      end
+
+      local opened, err = pcall(function()
+        telescope.extensions.dap.list_breakpoints {
+          layout_strategy = 'cursor',
+          layout_config = { width = 0.5, height = 0.4 },
+          path_display = { 'truncate' },
+        }
+      end)
+
+      if not opened then
+        vim.notify(('telescope-dap failed: %s'):format(err), vim.log.levels.WARN)
+      end
+    end
+
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<leader>rb', dap.clear_breakpoints, { desc = '[R]emove all [B]reakpoints' })
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -134,6 +154,7 @@ return {
     vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
     vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Toggle [B]reakpoint' })
+    vim.keymap.set('n', '<leader>bb', open_breakpoint_picker, { desc = 'Debug: [B]rowse [B]reakpoints' })
 
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
