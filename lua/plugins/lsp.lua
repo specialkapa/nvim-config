@@ -136,6 +136,7 @@ return {
           },
         },
       },
+      clangd = {},
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       cssls = {},
       tailwindcss = {},
