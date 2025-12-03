@@ -65,6 +65,16 @@ return {
       end
     end
 
+    local function focus_summary_window()
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].filetype == 'neotest-summary' then
+          vim.api.nvim_set_current_win(win)
+          break
+        end
+      end
+    end
+
     vim.api.nvim_create_autocmd('FileType', {
       group = summary_group,
       pattern = 'neotest-summary',
@@ -80,6 +90,12 @@ return {
           disable_summary_numbers(args.buf)
         end
       end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+      group = summary_group,
+      pattern = 'NeotestSummaryOpen',
+      callback = focus_summary_window,
     })
   end,
 }
