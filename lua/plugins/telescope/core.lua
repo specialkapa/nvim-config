@@ -20,6 +20,35 @@ return {
     local builtin = require 'telescope.builtin'
     local pretty = require 'plugins.telescope.pretty_pickers'
 
+    local function ts_select_dir_for_grep(prompt_bufnr)
+      local action_state = require 'telescope.actions.state'
+      local actions = require 'telescope.actions'
+      local fb = telescope.extensions.file_browser
+      local live_grep = builtin.live_grep
+      local current_line = action_state.get_current_line()
+
+      fb.file_browser {
+        files = false,
+        depth = false,
+        attach_mappings = function(_prompt_bufnr)
+          actions.select_default:replace(function()
+            local entry_path = action_state.get_selected_entry().Path
+            local dir = entry_path:is_dir() and entry_path or entry_path:parent()
+            local relative = dir:make_relative(vim.fn.getcwd())
+            local absolute = dir:absolute()
+
+            live_grep {
+              results_title = relative .. '/',
+              cwd = absolute,
+              default_text = current_line,
+            }
+          end)
+
+          return true
+        end,
+      }
+    end
+
     telescope.setup {
       defaults = {
         sorting_strategy = 'ascending',
@@ -39,6 +68,14 @@ return {
           additional_args = function()
             return { '--hidden' }
           end,
+          mappings = {
+            i = {
+              ['<C-f>'] = ts_select_dir_for_grep,
+            },
+            n = {
+              ['<C-f>'] = ts_select_dir_for_grep,
+            },
+          },
         },
       },
       extensions = {
